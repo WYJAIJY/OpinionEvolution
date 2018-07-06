@@ -1,0 +1,193 @@
+\documentclass[11pt]{report}
+
+\usepackage{tikz}
+\usetikzlibrary{bayesnet}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\newcommand{\Ep}{\mathbb{E}}
+\newcommand{\Real}{\mathcal{R}}
+\newcommand{\Gaussian}{\mathcal{N}}
+
+\begin{document}
+\title{Development and Derivation of the Psychological Model}
+\maketitle
+Dramatic real-world events are known to have the power to impact on public opinions and to cause shift on public attitudes. For example, assassinations of Martin Luther King created a cultural shift in attitudes on race issues. Thus we are motivated to analyze news and user generated contents on social networking platforms, model the evolution and shifts of public opinions,  exact common patterns and explain anomalies.
+
+This document provides development logs of the evolutionary summarization model, including intuitions, derivations, and result summaries.
+
+
+\part{Opinion Models}
+We first explore our options on modeling the evolution of public opinions. Before we go into the details, we have to list a few assumptions here. (1) We only consider bi-polarized opinions, i.e. each unit piece of social comment is pre-processed by some opinion classifiers to be either positive or negative. The unit to be processed can be a phrase about an entity, a sentence, or a minimal length semantic unit. (2) We consider there is a background opinion distribution, i.e. how users normally react to a certain entity or a particular event. The background is smoothly and slowly changing, e.g. the public opinion for civil rights is constantly changing. (3) However, sometimes a new piece of evidence might trigger a sudden shift on public opinions, e.g. the assassination of Martin Luther King boosts public  supports to civil rights.  
+    
+\begin{figure}
+  \centering
+  \tikz{ %
+%hypers
+    \node[const] (a) {$a$} ; %
+        \node[const,right = of a] (b) {$b$} ; 
+        \node[const,right = of b](sigma){$\sigma^2$};
+        
+%emotion evolutions        
+  \node[latent, below = of b](gamma){$\gamma$};
+
+   \node[latent, below = of sigma](alpha0){$\alpha_0$};
+     \node[const, right = of alpha0](alphadots){$\cdots$};
+   \node[latent, right = of alphadots](alphat){$\alpha_t$};
+    \node[latent, right = of alphat](alphatp){$\alpha_{t+1}$};
+    
+    \edge{a}{gamma};
+     \edge{b}{gamma};
+     
+      \edge{sigma}{alpha0};
+    	\edge{sigma}{alphat};
+	\edge{sigma}{alphatp};
+	\edge{alpha0}{alphadots};
+	\edge{alphat}{alphatp};
+    
+  	\node[latent, below = 1 of gamma] (s0) {$s_{0,n}$};
+%	 \node[latent, below = 0.8 of alpha0] (eta0) {$\eta_0$};
+       	\edge{gamma}{s0};
+%    	\edge{alpha0}{0};        
+	
+
+%	 \node[latent, below = 0.8 of alphat] (etat) {$\eta_t$};
+	 		\node[latent, right = 2.8 of s0 ] (st) {$s_{t,n}$};
+        	\edge{gamma}{st};
+%            	\edge{alphat}{etat};
+
+	
+        \node[latent, below = 2 of alpha0 ] (y0) {$y_{0,n,m}$};
+            \node[latent, below = 2  of alphat ] (yt) {$y_{t,n,m}$};
+       	\edge{s0}{y0};
+	\edge{alpha0}{y0};
+	    	\edge{st}{yt};
+	\edge{alphat}{yt};
+	
+	 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0 cm] {O0} {(y0)} {$M_n$};
+		 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0.12 cm] {S0} {(s0)  (O0) } {$N_0$}; 
+
+		 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0 cm] {Ot} {(yt) } {$M_n$};
+		 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0.12 cm] {St} {(st)  (Ot) } {$N_t$}; 
+	
+        \node[latent, below = 2 of y0 ] (beta) {$\beta$};
+        
+       	\edge{beta}{y0};
+	\edge{beta}{yt};
+	   \node[latent, below = of beta](c){$c$};
+	      \node[latent, right = of c](d){$d$};
+   	\edge{c}{beta};
+	\edge{d}{beta};
+       
+     }
+ \caption{Plate notation of the proposed opinion evolution model}\label{fig:opinion}
+\end{figure}
+
+First we generate the prior distribution for the background opinion distributions. 
+\begin{itemize}
+\item For time $t=0$, sample  for the public opinion distribution, $\alpha_0\sim \Gaussian(0,\sigma^2 I)$.
+\item For items $t=1: N$, sample $\alpha_{t+1}\sim \Gaussian(\alpha_t,\sigma^2)$. As $\Gaussian$ is a continuous and differentiable distribution, the evolution of background opinions is smooth and slow.
+\item Generate a global prior for the switch, i.e. a variable that controls how likely the public opinion to change, by $\gamma\sim Beta(a,b)$
+\end{itemize}
+
+Note that all $\alpha$s  are vectors of real numbers, $\alpha\in \Real^2$. Next to generate the opinion distribution, we adopt $\pi(\cdot)$ function to convert $\alpha$ to a value within $(0,1)$, $\pi(\alpha_t)=\frac{\exp \alpha_{t,0}}{\exp \alpha_{t,0} + \exp \alpha_{t,1}}$.
+
+For time $t$, with $N_t$ pieces of evidence, i.e. $N_t$ piece of news report published at time $t$, each evidence $n$ contains $M_n$ observations, e.g. user comments, we mimic the following generation process. 
+\begin{itemize}
+%\item Generate background opinion distribution $\eta_t \sim \pi(\alpha_t)$
+\item For each pieces of evidence
+\begin{itemize}
+\item Generate a switch $s_t \sim Bern(\gamma)$
+\item For each observation, generate $y_{t,n,m}\sim \begin{cases}
+Bern(\pi(\alpha_t)) & \text{ if } s_{t,n}= 1\\ 
+Bern(\beta) & \text{ if } s_{t,n}= 0 
+\end{cases}$
+\end{itemize}
+\end{itemize}
+
+The joint probability is given by
+\begin{eqnarray*}
+    p(\gamma,\beta,\alpha_0,\cdots,\alpha_T, \vec{s},\vec{y}, |a,b,c,d,\sigma^2) \\
+    =    p(\gamma|a,b) p(\beta|c,d)  p(\alpha_{0:T}|\sigma^2) \prod_t \prod_ n p(s_{t,n}|\gamma) \prod_m p(y_{t,n,m}|s_{t,n},\alpha_t,\beta) 
+    \end{eqnarray*}
+
+However, as the above complete likelihood involves natural parameters $\pi(\alpha)$, we apply the lower-bound $\forall t, \ln (\exp \alpha_{t,0}+ \exp \alpha_{t,1}) \leq \ln \hat{\xi_t} + \frac{\exp \alpha_{t,0} + \exp \alpha_{t,1} -\hat{\xi_t}}{\hat{\xi_t}}$ to $p(y_{t,n,m}|s_{t,n},\alpha_t,\beta) = [\pi(\alpha_t)^{y_{t,n,m}} (1-\pi(\alpha_t))^{1-y_{t,n,m}}]^{s_{t,n}} [\beta^{y_{t,n,m}}(1-\beta)^{1-y_{t,n,m}}]^{s_{t,n}}$ whenever neccessary.
+In the nutshell, the optimization algorithm is variational inference. Thus we make the following assumptions. 
+
+\begin{equation*}
+q(Z|\vec{y},a,b,c,d,\sigma^2) = q(\gamma|\hat{a},\hat{b}) q(\beta|\hat{c},\hat{d}) q(\alpha_{0:T}|\hat{\alpha_{0:T}})\prod_{t,n} q(s_{t,n}|\hat{e_{t,n}}) , 
+\end{equation*}
+where $Z$ includes all hidden variables, $\hat{e_{t,n}}\in \Real^2 $ is a vector.  
+
+We implement the iterations over all hidden variables. 
+
+\begin{eqnarray*}
+\ln q(\gamma|\hat{a},\hat{b}) & =  &\Ep [\ln p(\gamma|a,b) + \sum_{t,n} \ln p(s_{t,n}|\gamma) ] + const \\ \nonumber
+& = & (a-1)\ln \gamma + (b-1) \ln (1-\gamma) + \sum_{t,n} \Ep[s_{t,n}] \ln \gamma  + \sum_{t,n} \Ep[1-s_{t,n}] \ln (1-\gamma) + const \\  \nonumber
+\end{eqnarray*}
+
+\begin{eqnarray}
+\hat{a} & = & a+ \sum_{t,n} \Ep[s_{t,n}] \\\nonumber
+\hat{b} & = & b+ \sum_{t,n} \Ep[1-s_{t,n}] \\\nonumber
+\Ep[\gamma] &= & \frac{\hat{a}}{\hat{a}+\hat{b}} \\\nonumber
+\Ep[\ln \gamma] &= & \phi(\hat{a})-\phi(\hat{a}+\hat{b}) \\\nonumber
+\Ep[\ln(1- \gamma)] &= & \phi(\hat{b})-\phi(\hat{a}+\hat{b}) 
+\end{eqnarray}
+
+Note that the last conclusion is obtained by using $\lim_{k\leftarrow \infty }\frac{\delta (1-x)^k}{\delta k} = \ln (1-x)$. 
+
+\begin{eqnarray*}
+\ln q(\beta|\hat{c},\hat{d}) & =  &\Ep [\ln p(\beta|c,d) + \sum_{t,n,m} \ln p(y_{t,n,m}|s_{t,n},\alpha_t,\beta) ] + const \\\nonumber
+& = & (c-1)\ln \beta+ (d-1) \ln (1-\beta) + \sum_{t,n,m} \Ep[1-s_{t,n}] ( y_{t,n,m} \ln \beta  + (1-y_{t,n,m}) \ln (1-\beta) )+ const \\ \nonumber
+\end{eqnarray*}
+
+\begin{eqnarray}
+\hat{c} & = & c+ \Ep[s_{t,n}] \sum_{t,n,m} y_{t,n,m}  \\\nonumber
+\hat{c} & = & d+ \Ep[s_{t,n}] \sum_{t,n,m} (1-y_{t,n,m}) \\\nonumber
+\Ep[\beta] &= & \frac{\hat{c}}{\hat{c}+\hat{d}} \\\nonumber
+\Ep[\ln \beta] &= & \phi(\hat{c})-\phi(\hat{c}+\hat{d}) \\\nonumber
+\Ep[\ln (1-\beta)] &= & \phi(\hat{d})-\phi(\hat{c}+\hat{d}) 
+\end{eqnarray}
+
+\begin{eqnarray*}
+\ln q(s_{t,n}|\hat{e_{t,n}}) & =  &\Ep [\ln p(s_{t,n}|\gamma) + \sum_{m} \ln p(y_{t,n,m}|s_{t,n},\alpha_t,\beta) ] + const \\\nonumber
+& = & s_{t,n} \Ep[\ln \gamma]+ (1-s_{t,n}) \Ep[\ln (1-\gamma)] + s_{t,n} \sum_{m}  ( y_{t,n,m}   \Ep[\ln \pi (\alpha_t)] +(1-y_{t,n,m}) \Ep[\ln\beta])   \\\nonumber
+& & + (1-s_{t,n} )  \sum_{m}  ( y_{t,n,m}   \Ep[\ln \beta] +(1-y_{t,n,m}) \Ep[\ln(1-\beta)]) + const  
+\end{eqnarray*}
+
+\begin{eqnarray}
+\hat{e_{t,n}}_0 & = &\phi(\hat{a})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m}   \Ep[\alpha_{t,0}] +\sum_m (1-y_{t,n,m}) \Ep[\alpha_{t,1}])   \\\nonumber
+\hat{e_{t,n}}_1 & = &\phi(\hat{b})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m} \phi(\hat{c})-\phi(\hat{c}+\hat{d}) +\sum_m (1-y_{t,n,m}) (\phi(\hat{b})-\phi(\hat{a}+\hat{b})) 
+\end{eqnarray}
+We have to renormalize $\hat{e_{t,n}}$
+
+Finally, for $\alpha$, we extract the ELBO involving $\alpha$ terms, 
+
+\begin{eqnarray*}
+L(\alpha_{0:T}) & = & \Ep[\ln p(\alpha_{0:T}|\hat{\alpha_{0:T}},\sigma^2) + \sum_{t,n,m}  \ln p(y_{t,n,m}|s_{t,n},\alpha_t,\beta) ] + const \\\nonumber
+L(\alpha_t) & = & \frac{1}{2\sigma^2} \|\tilde{m_t}-\tilde{m_{t-1}}\|^2 - \frac{1}{\sigma^2} Tr(\tilde {T_t}) + \frac{1}{2\sigma^2} (Tr(\tilde{V_0} - Tr(\tilde{V_T})) \\\nonumber
+& & \sum_{t,n,w} \Ep [s_{t,n} y_{t,n,m} \ln \pi(\alpha_{t,0}) + s_{t,n}(1-y_{t,nm}) \ln (\pi(\alpha_{t,1}))] + const \\\nonumber
+& \geq & \frac{1}{2\sigma^2} \|\tilde{m_t}-\tilde{m_{t-1}}\|^2 - \frac{1}{\sigma^2} Tr(\tilde {T_t}) + \frac{1}{2\sigma^2} (Tr(\tilde{V_0} - Tr(\tilde{V_T})) \\\nonumber
+& & + \sum_t(\sum_n \Ep[s_{t,n}] \sum_m y_{t,n,m}) \alpha_{t,0} + \sum_t(\sum_n \Ep[s_{t,n}] \sum_m (1-y_{t,n,m})) \alpha_{t,1}\\\nonumber
+& & + \frac{\exp \alpha_{t,0}}{\hat{\xi_t}}\sum_{t,n} \Ep[s_{t,n}]  + \frac{\exp \alpha_{t,1}}{\hat{\xi_t}}\sum_{t,n} \Ep[1-s_{t,n}]  + const
+\end{eqnarray*}
+
+Let $\frac{\delta(L(\alpha_t)}{\delta \alpha_t}=0$, we have should use the forward-backward recursive algorithm in variational Kalman filtering. 
+
+The ELBO involving $\hat{\xi_t}$ terms are 
+
+\begin{eqnarray*}
+L(\hat{\xi_t}) & = & - \sum_{t,n} \Ep[s_{t,n}] \ln \hat{\xi_t}  -  \sum_{t,n} \Ep[s_{t,n}] \frac{\Ep[\exp \alpha_{t,0} + \exp \alpha_{t,1} ]}{\hat{\xi_t}} 
+\end{eqnarray*}
+
+As in the variational Kalman filtering $\Ep[\exp \alpha_{t,0} + \exp \alpha_{t,1}]=\sum_{i=1,2} \exp (\tilde{m}_{t,i}+\tilde{V}_{t,i}/2)$, we have:
+
+\begin{eqnarray}
+\frac{\delta -L(\hat{\xi_t}) }{\delta \xi_t} & = & \frac{\sum_{t,n} \Ep[s_{t,n}] }{ \hat{\xi_t}  } + \frac{ \sum_{t,n} \Ep[s_{t,n}]  \sum_{i=1,2} \exp (\tilde{m}_{t,i}+\tilde{V}_{t,i}/2)}{\hat{\xi_t} ^2}\\\nonumber
+& = & 0\\\nonumber
+\hat{\xi_t} & = &  \sum_{i=1,2} \exp (\tilde{m}_{t,i}+\tilde{V}_{t,i}/2)
+ \end{eqnarray}
+
+
+
+
+\end{document}
