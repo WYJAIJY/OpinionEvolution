@@ -110,7 +110,7 @@ The joint probability is given by
     =    p(\gamma|a,b) p(\beta|c,d)  p(\alpha_{0:T}|\sigma^2) \prod_t \prod_ n p(s_{t,n}|\gamma) \prod_m p(y_{t,n,m}|s_{t,n},\alpha_t,\beta) 
     \end{eqnarray*}
 
-However, as the above complete likelihood involves natural parameters $\pi(\alpha)$, we apply the lower-bound $\forall t, \ln (\exp \alpha_{t,0}+ \exp \alpha_{t,1}) \leq \ln \hat{\xi_t} + \frac{\exp \alpha_{t,0} + \exp \alpha_{t,1} -\hat{\xi_t}}{\hat{\xi_t}}$ to $p(y_{t,n,m}|s_{t,n},\alpha_t,\beta) = [\pi(\alpha_t)^{y_{t,n,m}} (1-\pi(\alpha_t))^{1-y_{t,n,m}}]^{s_{t,n}} [\beta^{y_{t,n,m}}(1-\beta)^{1-y_{t,n,m}}]^{s_{t,n}}$ whenever neccessary.
+However, as the above complete likelihood involves natural parameters $\pi(\alpha)$, we apply the lower-bound $\forall t, \ln (\exp \alpha_{t,0}+ \exp \alpha_{t,1}) \leq \ln \hat{\xi_t} + \frac{\exp \alpha_{t,0} + \exp \alpha_{t,1} -\hat{\xi_t}}{\hat{\xi_t}}$ to $p(y_{t,n,m}|s_{t,n},\alpha_t,\beta) = [\pi(\alpha_t)^{y_{t,n,m}} (1-\pi(\alpha_t))^{1-y_{t,n,m}}]^{s_{t,n}} [\beta^{y_{t,n,m}}(1-\beta)^{1-y_{t,n,m}}]^{1-s_{t,n}}$ whenever neccessary.
 In the nutshell, the optimization algorithm is variational inference. Thus we make the following assumptions. 
 
 \begin{equation*}
@@ -141,8 +141,8 @@ Note that the last conclusion is obtained by using $\lim_{k\leftarrow \infty }\f
 \end{eqnarray*}
 
 \begin{eqnarray}
-\hat{c} & = & c+ \Ep[s_{t,n}] \sum_{t,n,m} y_{t,n,m}  \\\nonumber
-\hat{c} & = & d+ \Ep[s_{t,n}] \sum_{t,n,m} (1-y_{t,n,m}) \\\nonumber
+\hat{c} & = & c+ \Ep[1-s_{t,n}] \sum_{t,n,m} y_{t,n,m}  \\\nonumber
+\hat{d} & = & d+ \Ep[1-s_{t,n}] \sum_{t,n,m} (1-y_{t,n,m}) \\\nonumber
 \Ep[\beta] &= & \frac{\hat{c}}{\hat{c}+\hat{d}} \\\nonumber
 \Ep[\ln \beta] &= & \phi(\hat{c})-\phi(\hat{c}+\hat{d}) \\\nonumber
 \Ep[\ln (1-\beta)] &= & \phi(\hat{d})-\phi(\hat{c}+\hat{d}) 
@@ -150,13 +150,13 @@ Note that the last conclusion is obtained by using $\lim_{k\leftarrow \infty }\f
 
 \begin{eqnarray*}
 \ln q(s_{t,n}|\hat{e_{t,n}}) & =  &\Ep [\ln p(s_{t,n}|\gamma) + \sum_{m} \ln p(y_{t,n,m}|s_{t,n},\alpha_t,\beta) ] + const \\\nonumber
-& = & s_{t,n} \Ep[\ln \gamma]+ (1-s_{t,n}) \Ep[\ln (1-\gamma)] + s_{t,n} \sum_{m}  ( y_{t,n,m}   \Ep[\ln \pi (\alpha_t)] +(1-y_{t,n,m}) \Ep[\ln\beta])   \\\nonumber
+& = & s_{t,n} \Ep[\ln \gamma]+ (1-s_{t,n}) \Ep[\ln (1-\gamma)] + s_{t,n} \sum_{m}  ( y_{t,n,m}   \Ep[\ln \pi (\alpha_t)] +(1-y_{t,n,m}) \Ep[1-\ln \pi(\alpha_t)])   \\\nonumber
 & & + (1-s_{t,n} )  \sum_{m}  ( y_{t,n,m}   \Ep[\ln \beta] +(1-y_{t,n,m}) \Ep[\ln(1-\beta)]) + const  
 \end{eqnarray*}
 
 \begin{eqnarray}
 \hat{e_{t,n}}_0 & = &\phi(\hat{a})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m}   \Ep[\alpha_{t,0}] +\sum_m (1-y_{t,n,m}) \Ep[\alpha_{t,1}])   \\\nonumber
-\hat{e_{t,n}}_1 & = &\phi(\hat{b})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m} \phi(\hat{c})-\phi(\hat{c}+\hat{d}) +\sum_m (1-y_{t,n,m}) (\phi(\hat{b})-\phi(\hat{a}+\hat{b})) 
+\hat{e_{t,n}}_1 & = &\phi(\hat{b})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m} \phi(\hat{c})-\phi(\hat{c}+\hat{d}) +\sum_m (1-y_{t,n,m}) (\phi(\hat{d})-\phi(\hat{c}+\hat{d})) 
 \end{eqnarray}
 We have to renormalize $\hat{e_{t,n}}$
 
@@ -164,11 +164,11 @@ Finally, for $\alpha$, we extract the ELBO involving $\alpha$ terms,
 
 \begin{eqnarray*}
 L(\alpha_{0:T}) & = & \Ep[\ln p(\alpha_{0:T}|\hat{\alpha_{0:T}},\sigma^2) + \sum_{t,n,m}  \ln p(y_{t,n,m}|s_{t,n},\alpha_t,\beta) ] + const \\\nonumber
-L(\alpha_t) & = & \frac{1}{2\sigma^2} \|\tilde{m_t}-\tilde{m_{t-1}}\|^2 - \frac{1}{\sigma^2} Tr(\tilde {T_t}) + \frac{1}{2\sigma^2} (Tr(\tilde{V_0} - Tr(\tilde{V_T})) \\\nonumber
-& & \sum_{t,n,w} \Ep [s_{t,n} y_{t,n,m} \ln \pi(\alpha_{t,0}) + s_{t,n}(1-y_{t,nm}) \ln (\pi(\alpha_{t,1}))] + const \\\nonumber
-& \geq & \frac{1}{2\sigma^2} \|\tilde{m_t}-\tilde{m_{t-1}}\|^2 - \frac{1}{\sigma^2} Tr(\tilde {T_t}) + \frac{1}{2\sigma^2} (Tr(\tilde{V_0} - Tr(\tilde{V_T})) \\\nonumber
+L(\alpha_t) & = & -\frac{1}{2\sigma^2} \|\tilde{m_t}-\tilde{m_{t-1}}\|^2 - \frac{1}{\sigma^2} Tr(\tilde {T_t}) + \frac{1}{2\sigma^2} (Tr(\tilde{V_0} - Tr(\tilde{V_T})) \\\nonumber
+& & \sum_{t,n,m} \Ep [s_{t,n} y_{t,n,m} \ln \pi(\alpha_{t,0}) + s_{t,n}(1-y_{t,nm}) \ln (\pi(\alpha_{t,1}))] + const \\\nonumber
+& \geq & -\frac{1}{2\sigma^2} \|\tilde{m_t}-\tilde{m_{t-1}}\|^2 - \frac{1}{\sigma^2} Tr(\tilde {T_t}) + \frac{1}{2\sigma^2} (Tr(\tilde{V_0} - Tr(\tilde{V_T})) \\\nonumber
 & & + \sum_t(\sum_n \Ep[s_{t,n}] \sum_m y_{t,n,m}) \alpha_{t,0} + \sum_t(\sum_n \Ep[s_{t,n}] \sum_m (1-y_{t,n,m})) \alpha_{t,1}\\\nonumber
-& & + \frac{\exp \alpha_{t,0}}{\hat{\xi_t}}\sum_{t,n} \Ep[s_{t,n}]  + \frac{\exp \alpha_{t,1}}{\hat{\xi_t}}\sum_{t,n} \Ep[1-s_{t,n}]  + const
+& & - \sum_{t,n} \Ep[s_{t,n}] \ln \hat{\xi_t}  -  \sum_{t,n} \Ep[s_{t,n}] \frac{\Ep[\exp \alpha_{t,0} + \exp \alpha_{t,1} ]}{\hat{\xi_t}}  + const
 \end{eqnarray*}
 
 Let $\frac{\delta(L(\alpha_t)}{\delta \alpha_t}=0$, we have should use the forward-backward recursive algorithm in variational Kalman filtering. 
