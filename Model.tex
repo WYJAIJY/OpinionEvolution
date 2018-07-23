@@ -155,17 +155,17 @@ Note that the last conclusion is obtained by using $\lim_{k\leftarrow \infty }\f
 \end{eqnarray*}
 
 \begin{eqnarray}
-\hat{e_{t,n}}_0 & = &\phi(\hat{a})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m}   \Ep[\alpha_{t,0}] +\sum_m (1-y_{t,n,m}) \Ep[\alpha_{t,1}])   \\\nonumber
-\hat{e_{t,n}}_1 & = &\phi(\hat{b})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m} \phi(\hat{c})-\phi(\hat{c}+\hat{d}) +\sum_m (1-y_{t,n,m}) (\phi(\hat{d})-\phi(\hat{c}+\hat{d})) 
+\ln \hat{e_{t,n}}_0 & = &\phi(\hat{a})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m}   \Ep[\alpha_{t,0}] +\sum_m (1-y_{t,n,m}) \Ep[\alpha_{t,1}])   \\\nonumber
+&=&\phi(\hat{a})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m}   \hat{\alpha_{t,0}} +\sum_m (1-y_{t,n,m}) \hat{\alpha_{t,1}} \\\nonumber 
+\ln \hat{e_{t,n}}_1 & = &\phi(\hat{b})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m} (\phi(\hat{c})-\phi(\hat{c}+\hat{d}) +\sum_m (1-y_{t,n,m}) (\phi(\hat{d})-\phi(\hat{c}+\hat{d})) 
 \end{eqnarray}
-We have to renormalize $\hat{e_{t,n}}$
+We have to renormalize $\hat{e_{t,n}}_0$, $\hat{e_{t,n}}_1$ to make sure $\hat{e_{t,n}}_0+\hat{e_{t,n}}_1=1$.
 
 %===7.10
 Finally, for $\alpha$, we extract the ELBO involving $\alpha$ terms, we adopt variational Kalman Filtering. The state space model is $q(\alpha|_t\hat{\alpha}_{t})\sim \Gaussian(\hat{\alpha}_t,\sigma^2I)$. We have the following results.
 \begin{eqnarray*}
 m_t
 H(q) &= & \frac{1}{2} [1+\ln (2\sigma^2 \pi)] \\\nonumber
-
 \end{eqnarray*}
 \begin{eqnarray*}
 L(\alpha_{0:T}) & = & \Ep[\ln p(\alpha_{0:T}|\hat{\alpha_{0:T}},\sigma^2) + \sum_{t,n,m}  \ln p(y_{t,n,m}|s_{t,n},\alpha_t,\beta) ] + H(q(\alpha)) + const \\\nonumber
