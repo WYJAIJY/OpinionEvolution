@@ -79,7 +79,71 @@ We first explore our options on modeling the evolution of public opinions. Befor
 	\edge{d}{beta};
        
      }
- \caption{Plate notation of the proposed opinion evolution model}\label{fig:opinion}
+ \caption{Plate notation of the proposed opinion evolution model 1.0, opinion polarization pre-processed.}\label{fig:opinion}
+\end{figure}
+
+In order 
+\begin{figure}
+  \centering
+  \tikz{ %
+%hypers
+    \node[const] (a) {$a$} ; %
+        \node[const,right = of a] (b) {$b$} ; 
+        \node[const,right = of b](sigma){$\sigma^2$};
+        
+%emotion evolutions        
+  \node[latent, below = of b](gamma){$\gamma$};
+
+   \node[latent, below = of sigma](alpha0){$\alpha_0$};
+     \node[const, right = of alpha0](alphadots){$\cdots$};
+   \node[latent, right = of alphadots](alphat){$\alpha_t$};
+    \node[latent, right = of alphat](alphatp){$\alpha_{t+1}$};
+    
+    \edge{a}{gamma};
+     \edge{b}{gamma};
+     
+      \edge{sigma}{alpha0};
+    	\edge{sigma}{alphat};
+	\edge{sigma}{alphatp};
+	\edge{alpha0}{alphadots};
+	\edge{alphat}{alphatp};
+    
+  	\node[latent, below = 1 of gamma] (s0) {$s_{0,n}$};
+%	 \node[latent, below = 0.8 of alpha0] (eta0) {$\eta_0$};
+       	\edge{gamma}{s0};
+%    	\edge{alpha0}{0};        
+	
+
+%	 \node[latent, below = 0.8 of alphat] (etat) {$\eta_t$};
+	 		\node[latent, right = 2.8 of s0 ] (st) {$s_{t,n}$};
+        	\edge{gamma}{st};
+%            	\edge{alphat}{etat};
+
+	
+        \node[latent, below = 2 of alpha0 ] (y0) {$y_{0,n,m}$};
+            \node[latent, below = 2  of alphat ] (yt) {$y_{t,n,m}$};
+       	\edge{s0}{y0};
+	\edge{alpha0}{y0};
+	    	\edge{st}{yt};
+	\edge{alphat}{yt};
+	
+	 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0 cm] {O0} {(y0)} {$M_n$};
+		 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0.12 cm] {S0} {(s0)  (O0) } {$N_0$}; 
+
+		 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0 cm] {Ot} {(yt) } {$M_n$};
+		 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0.12 cm] {St} {(st)  (Ot) } {$N_t$}; 
+	
+        \node[latent, below = 2 of y0 ] (beta) {$\beta$};
+        
+       	\edge{beta}{y0};
+	\edge{beta}{yt};
+	   \node[latent, below = of beta](c){$c$};
+	      \node[latent, right = of c](d){$d$};
+   	\edge{c}{beta};
+	\edge{d}{beta};
+       
+     }
+ \caption{Plate notation of the proposed opinion evolution model 2.0, opinion vocabulary.}\label{fig:opinion}
 \end{figure}
 
 First we generate the prior distribution for the background opinion distributions. 
