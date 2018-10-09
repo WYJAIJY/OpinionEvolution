@@ -72,14 +72,14 @@ This is not a trivial problem because the length limit of microblogs encourage p
 As in Fig.~\ref{fig:tweet}, multiple opinion expressions are put in a sentence which target towards different entities. %running example, figure circle 
 To address this challenge, it is helpful to embed proximity information to enhance entity-level sentiment extraction accuracy. 
 
-%static lexicon
-The second challenge is to \textbf{build incident specific sentiment lexicon}. 
+%noisy lexicon
+The second challenge is to \textbf{filter accurate lexicon}. 
 In the literature there are two types of sentiment extraction methods: supervised and lexicon based.
-Due to the dynamic nature of social incidents (i.e. happen suddenly, constantly changing), it is infeasible to label real-time training corpus. 
+Due to the dynamic nature of social incidents (i.e. happen suddenly, constantly changing), it is infeasible to label real-time training corpus. %
 Lexicon based sentiment extraction tools are widely adopted~\cite{sentistrength2010,Thelwall2012lexicon,Ortega2013lexicon}. They select a collection of words with negative and positive sentiments to compute the final polarity of sentiments. These methods do not
-require a training dataset. The accuracy of the classification depends on the quality of the lexicon and the rules for calculating sentiment polarity. The problem is that one lexicon is not suitable for all incidents. 
+require a training dataset. The accuracy of the classification depends on the quality of the lexicon and the rules for calculating sentiment polarity. The problem is that one lexicon is too general and noisy %noisy
 For example, in Figure~\ref{fig:tweet}, We found that 
- So it is necessary to construct a ``global'' vocabulary and an incident specific lexicon without supervision.
+ So it is necessary to construct a minimal ``global'' vocabulary with high precision and an incident specific lexicon without supervision.
 
 %background evolution + shift
 The third challenge is to \textbf{simutanously model the evolution of opinion and opinion shift}.
@@ -125,28 +125,29 @@ However, %drawback
 \section{Problem Definition}\label{sec:problem definition}
 Social events are planned by people, attended by people and that the media illustrating the events are captured by people~\cite{Papadopoulos2012SocialEvent}. So social events involve interactions between different entities. Social events are dynamic and occur in a limited time. Emotional changes contained in social events tend to be regular. These features result in sentiment analysis and sentiment tracking methods previously used on entities and topics that no longer apply to social events. We use a new opinion model to simulate the evolution of public opinion in social events and to find the time points when sentiments shift suddenly during the evolution. In order to achieve the best results of our model, we consider the impact of the entity on the results of sentiment analysis, and use the core lexicon and feature lexicon to construct a unique lexicon of each event to improve the accuracy of sentiment classification.
 
+%architecture
 
-\section{Sentiment Classification}\label{sec:sentiment classification}
+\section{Entity-level Sentiment Classification}\label{sec:sentiment classification}
+%framework
+Our goal here % two-steps
+is to extract a global lexicon for all incidents, incident specific lexicon. %lexicon
+incorporate distance information in sentiment classification. 
+
 We have improved two aspects to increase the accuracy of sentiment classification:  (1)We use the core lexicon and feature lexicon to construct a unique lexicon of each event. (2) We add entities to the process of sentiment classification.
 \subsection{Core Lexicon And Feature Lexicon}
-Here, we describe the process of generating the core lexicon and feature lexicon.
-The core lexicon is a collection of emotional words shared by all events. The words in the core lexicon are not only shared by all events, but also represent the strongest and most explicit sentiment polarity. The feature lexicon consists of sentiment words that only included in one event. We follow the steps below to find the core lexicon and feature lexicon: 
+Given a set of candidate sentiment words $W$ with labeled sentiment polarity $P$, we aim to select a minimal global lexicon for all events.  
 
-1. Extract the words in the corpus and remove the neutral words, low frequency words and stop words to get the candidate lexicon. 
+\textbf{Graph construction}:  $G=\{V,E\}$, where each node $v\in V$ represents a word $w\i W$ in the corpus and remove the neutral words, low frequency words and stop words to get the candidate lexicon.  If two words appear in the same sentence, then there is an edge between the nodes corresponding to the two words. Traversing the corpus of several events, getting the graph corresponding to these events. 
 
-2. Use a graph to represent the candidate lexicon. Each word in the candidate lexicon is used as a node. If two words appear in the same sentence, then there is an edge between the nodes corresponding to the two words. Traversing the corpus of several events, getting the graph corresponding to these events. 
+\textbf{Global lexicon $U$ extraction}: inspired by ~\cite{Zhang2012corenodes}, a node $u$ is added to the global lexicon $U$ if $d(u)\geq \max\{d(v)|v\in N(u)\}$,  node having a greater degree than all of its adjacent nodes. 
 
-3. Look for the core nodes and feature nodes in the graph, and their corresponding words form the core lexicon and feature lexicon.
-
-We use Tiantian Zhang's method to find the core node in the graph~\cite{Zhang2012corenodes}. This method starts from the source node. Nodes connected to the source node and having a greater degree than the source node constitute a candidate nodes set. Then select the node in the candidate set that is closest to the source node. Repeat this process to get closer to the core node step by step. This method uses the following formula to calculate the intimacy between two nodes A and B :
+\textbf{Incident specific lexicon $Q$}: compute pair-wise similarity $s(i,j), i,j\in V$. $U$ $l(i,j)=\max {s}$ top . 
 
 \begin{equation}
-    intimate(A,B) = \frac{2*|Edeg(adj(A)\cap adj(B))|}{|(adj(A)\cap adj(B)|*(|(adj(A)\cap adj(B)|-1)}
+    s(i,j) = \frac{2*|Edeg(adj(i)\cap adj(j))|}{|(adj(i)\cap adj(j)|*(|(adj(i)\cap adj(j)|-1)}
 \end{equation}
+$adj(A)$ is the set of nodes adjacent to A, adj(A) $\cap$ adj(B) is the common nodes of adjacent nodes of A and adjacent nodes of B. Edge(adj(A) $\cap$ adj(B)) stands for the edges linked by the nodes in adj(A) $\cap$ adj(B).%modification on notations
 
-adj(A) is the set of nodes adjacent to A, adj(A) $\cap$ adj(B) is the common nodes of adjacent nodes of A and adjacent nodes of B. Edge(adj(A) $\cap$ adj(B)) stands for the edges linked by the nodes in adj(A) $\cap$ adj(B).
-
-We start with each node with the degree equal to one in the graph to find the core node, and the corresponding words form the core lexicon. In order to ensure that the feature words belong to the sentiment words, we regard the three nodes closest to the core node on the path of finding the core node as feature nodes, and the corresponding words form the feature lexicon.
 
 \subsection{Distance Function}
 Here, we describe how to add entities to the process of sentiment classification. We use entities as the granularity of sentiment classification. We believe that in one sentence, the sentiment words in different positions have different effects on the entity. Sentiment words that are close to the entity have a greater influence on the sentiment polarity of the sentence than the sentiment words far from the entity. We use the average of all sentiment words on the entity as the sentiment polarity of the sentence.
@@ -184,14 +185,15 @@ k(i,j)=\begin{cases}
 
 $i$ is the position of the sentiment word in the sentence, and $j$ is the position of the entity in the sentence. All four of these kernel functions have only one parameter. We will determine the best form of the distance function and best value of the parameter in the experiment.
 
-\subsection{Calculate Sentiment polarity}
+\subsection{Calculate Entity level Sentiment polarity}
 Based on the above work, here we give the formula for calculating the sentiment value of a sentence. We first calculate the influence of one of the sentiment words on the entity.
 \begin{equation}
     s_i = (-1)^n\cdot d_i\cdot v_i\cdot k(p_i,j)
 \end{equation}
 $i$ is the number of this sentiment word. $n$ is the number of gainsay words between this emotional word and the sentiment word before it. $d_i$ is the sum of the weights of the degree words between this sentiment word and the sentiment word before it. $v_i$ is the emotional value of this emotional word. $k$ is the distance function. $p_i$ is the location of this emotional word. $j$ is the location of the entity.
 
-We calculate the influence of all sentiment words on the entity according to this formula, and take the average value as the sentiment value of the sentence. If the sentiment value is greater than 0, we think that the sentence has a positive emotion. If the sentiment value is less than 0, we think that the sentence has a negative emotion.
+We calculate the influence of all sentiment words on the entity according to this formula, and take the average value as the sentiment value of the sentence. If the sentiment value is greater than 0, we think that the sentence has a positive emotion. If the sentiment value is less than 0, we think that the entity has a negative emotion.
+
 \section{Public Opinion Model}\label{sec:public opinion model}
 Dramatic real-world events are known to have the power to impact on public opinions and to cause shift on public attitudes. For example, assassinations of Martin Luther King created a cultural shift in attitudes on race issues. Thus we are motivated to analyze news and user generated contents on social networking platforms, model the evolution and shifts of public opinions,  exact common patterns and explain anomalies.
 
@@ -199,7 +201,7 @@ We first explore our options on modeling the evolution of public opinions. Befor
 
 \begin{figure}
   \centering
-  \tikz{ %
+  \tikz[scale=0.5]{ %
 %hypers
     \node[const] (a) {$a$} ; %
         \node[const,right = of a] (b) {$b$} ; 
