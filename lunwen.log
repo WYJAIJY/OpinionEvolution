@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.10)  8 OCT 2018 17:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.10)  9 OCT 2018 10:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -783,25 +783,31 @@ File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 37.
+Package epstopdf Info: Source file: <tweet2.eps>
+(epstopdf)                    date: 2018-10-08 15:31:44
+(epstopdf)                    size: 5612877 bytes
+(epstopdf)             Output file: <tweet2-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-10-09 09:00:52
+(epstopdf)                    size: 124505 bytes
+(epstopdf)             Command: <repstopdf --outfile=tweet2-eps-converted-to.pd
+f tweet2.eps>
+(epstopdf)             \includegraphics on input line 59.
+Package epstopdf Info: Output file is already uptodate.
 
+<tweet2-eps-converted-to.pdf, id=4, 993.7125pt x 935.495pt>
+File: tweet2-eps-converted-to.pdf Graphic file (type pdf)
 
-LaTeX Warning: Reference `' on page 1 undefined on input line 63.
+<use tweet2-eps-converted-to.pdf>
+Package pdftex.def Info: tweet2-eps-converted-to.pdf used on input line 59.
+(pdftex.def)             Requested size: 347.12225pt x 252.94388pt.
+ [1
 
-[1
-
-{f:/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-
-LaTeX Warning: Reference `' on page 2 undefined on input line 72.
-
-[2]
+{f:/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2 <./tweet2-ep
+s-converted-to.pdf>]
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
- [3]
-Underfull \vbox (badness 1997) has occurred while \output is active []
-
- [4]
-[5] [6]
+ [3] [4] [5]
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
@@ -857,8 +863,9 @@ Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
- [7] [8]
-Overfull \hbox (10.91754pt too wide) in paragraph at lines 271--273
+ [6]
+[7]
+Overfull \hbox (10.91754pt too wide) in paragraph at lines 292--294
 \OML/cmm/m/it/10 p\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 y[]\OMS/cmsy/m/n/10 j\OML/c
 mm/m/it/10 s[]; []; ^^L\OT1/cmr/m/n/10 ) = [\OML/cmm/m/it/10 ^^Y\OT1/cmr/m/n/1
 0 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 )[](1 \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it
@@ -867,74 +874,48 @@ it/10 ^^L[]\OT1/cmr/m/n/10 (1 \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it/10 ^^L\OT1/cmr
 /m/n/10 )[]][]$
  []
 
-[9]
-Overfull \hbox (7.53654pt too wide) in paragraph at lines 314--325
+[8]
+Overfull \hbox (7.53654pt too wide) in paragraph at lines 354--365
  [] 
  []
 
-
-Underfull \vbox (badness 3977) has occurred while \output is active []
-
- [10]
+[9]
 Package epstopdf Info: Source file: <sigma.eps>
-(epstopdf)                    date: 2018-10-07 08:14:16
-(epstopdf)                    size: 29842 bytes
+(epstopdf)                    date: 2018-10-08 17:51:51
+(epstopdf)                    size: 30066 bytes
 (epstopdf)             Output file: <sigma-eps-converted-to.pdf>
-(epstopdf)                    date: 2018-10-08 17:02:19
+(epstopdf)                    date: 2018-10-08 17:51:51
 (epstopdf)                    size: 13750 bytes
 (epstopdf)             Command: <repstopdf --outfile=sigma-eps-converted-to.pdf
  sigma.eps>
-(epstopdf)             \includegraphics on input line 336.
+(epstopdf)             \includegraphics on input line 378.
 Package epstopdf Info: Output file is already uptodate.
-
-<sigma-eps-converted-to.pdf, id=56, 421.575pt x 316.18124pt>
+ <sigma-eps-converted-to.pdf, id=57, 421.575pt x 316.18124pt>
 File: sigma-eps-converted-to.pdf Graphic file (type pdf)
 
 <use sigma-eps-converted-to.pdf>
-Package pdftex.def Info: sigma-eps-converted-to.pdf used on input line 336.
+Package pdftex.def Info: sigma-eps-converted-to.pdf used on input line 378.
 (pdftex.def)             Requested size: 173.56088pt x 115.62953pt.
 
-Overfull \hbox (6.59933pt too wide) in paragraph at lines 345--346
+Overfull \hbox (6.59933pt too wide) in paragraph at lines 388--389
 []\OT1/cmr/m/n/10 We com-pared our method to Sen-tiStrength, SentiStrength-SE [
 27] and SentCR.
  []
 
-[11 <./sigma-eps-converted-to.pdf>]
-Overfull \hbox (29.75648pt too wide) in paragraph at lines 353--364
- [] 
- []
-
-Package epstopdf Info: Source file: <alpha.eps>
-(epstopdf)                    date: 2018-10-07 08:14:16
-(epstopdf)                    size: 19940 bytes
-(epstopdf)             Output file: <alpha-eps-converted-to.pdf>
-(epstopdf)                    date: 2018-10-08 17:02:47
-(epstopdf)                    size: 8042 bytes
-(epstopdf)             Command: <repstopdf --outfile=alpha-eps-converted-to.pdf
- alpha.eps>
-(epstopdf)             \includegraphics on input line 377.
-Package epstopdf Info: Output file is already uptodate.
-<alpha-eps-converted-to.pdf, id=65, 421.575pt x 316.18124pt>
-File: alpha-eps-converted-to.pdf Graphic file (type pdf)
-
-<use alpha-eps-converted-to.pdf>
-Package pdftex.def Info: alpha-eps-converted-to.pdf used on input line 377.
-(pdftex.def)             Requested size: 173.56088pt x 115.62953pt.
- [12] [13 <./alpha-eps-converted-to.pdf>]
+[10 <./sigma-eps-converted-to.pdf>] [11]
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
+ [12]
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
-
-[14]
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
@@ -956,7 +937,6 @@ Missing character: There is no ™ in font cmr9!
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
- [15]
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
@@ -984,16 +964,14 @@ Missing character: There is no ™ in font cmr9!
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
+ [13]
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no “ in font cmr9!
- [16] (./lunwen.aux)
-
-LaTeX Warning: There were undefined references.
-
+ [14] (./lunwen.aux)
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
@@ -1003,13 +981,13 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 ### simple group (level 1) entered at line 1061 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 16611 strings out of 493013
- 342775 string characters out of 6136992
- 455094 words of memory out of 5000000
+ 16612 strings out of 493013
+ 342794 string characters out of 6136992
+ 433724 words of memory out of 5000000
  19809 multiletter control sequences out of 15000+600000
  12883 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,11n,78p,2773b,2405s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,10n,78p,1353b,2404s stack positions out of 5000i,500n,10000p,200000b,80000s
 <f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx
 10.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><f
 :/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><f:/texlive/
@@ -1027,10 +1005,10 @@ blic/amsfonts/cm/cmr9.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfon
 ts/cm/cmsy10.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cms
 y7.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb><f:
 /texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on lunwen.pdf (16 pages, 288577 bytes).
+Output written on lunwen.pdf (14 pages, 393779 bytes).
 PDF statistics:
- 148 PDF objects out of 1000 (max. 8388607)
- 105 compressed objects within 2 object streams
+ 139 PDF objects out of 1000 (max. 8388607)
+ 99 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  23 words of extra memory for PDF output out of 10000 (max. 10000000)
 

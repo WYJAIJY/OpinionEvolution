@@ -41,43 +41,53 @@ Tracking opinion over time is a powerful tool that can be used to detect the pos
 %
 \section{Introduction}
 %Motivation
-Nowadays Microblogging has become the major platform for Chinese people to publish information and share opinions about social incidents. Public opinion on Microblogging platforms has greatly influenced the Chinese society. 
-For example, even change investigation and judicial outcome~\cite{}. %A running example%http://xueshu.baidu.com/s?wd=paperuri:(956accc23c0da9971268c0ccc7f0d49e)&filter=sc_long_sign&sc_ks_para=q%3DThe+Battle+of+Microblogging+for+Legal+Justice+in+China&tn=SE_baiduxueshu_c1gjeupa&ie=utf-8&sc_us=11884011151155852406
-It is appealing for individuals, business organizations, researchers, and government officials.%general conclusion%http://www.chinadaily.com.cn/china/2011-03/02/content_12099500.htm
+Nowadays Microblogging has become the major platform for Chinese people to publish information and share opinions about social incidents. Public opinion on Microblogging platforms has greatly influenced the Chinese society. For example, even change investigation and judicial outcome. In the famous ``My father is Li Gang'' incident, the son of an officer killed an innocent female college student with no regrets. This event caused great anger on the Microblogging, which made the criminals got the punishment he deserved. Public opinion is appealing for individuals, business organizations, researchers, and government officials.%general conclusion%http://www.chinadaily.com.cn/china/2011-03/02/content_12099500.htm
 
 %Problem studied
 In this paper, to facilitate understanding of public opinions, we focus on the problem of modeling sentiment evolution for social incidents. 
-Given a sequence of news reports and associated microblogging comments on one socia incident, our goal is to reveal the evolution patterns of public opinions, identify the significant opinion shifts, and explain cause of the opinion shifts.
-%A running example, figure
+Given a sequence microblogging comments on one socia incident, our goal is to reveal the evolution patterns of public opinions, identify the significant opinion shifts, and explain cause of the opinion shifts. 
+As shown in Fig.~\ref{fig:tweet}, for comments on the "My Dad is Li Gang", we anlayze the public opinion and visualize % .
+
+%first layer: input sequence from left to right, balanced text size
+%input: background tweets in each time slice 1~2
+%second layer output entity-specific sentiment polarity +- bar graph , aim to visualize evolution
+%third layer  entity specific vocabulary
+%forth layer shift, background tweet 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\textwidth,height=3.5in]{tweet2.eps}
+    \setlength{\abovecaptionskip}{-0.1cm}
+    \caption{Comments from ``My father is Li Gang'' incident and reflected characteristics of social incident}\label{fig:tweet}
+\end{figure}
 
 %Related work
-Recently there is an increasing interest in tracking microblogging sentiments for entities~\cite{Giachanou2016sentichange,Giachanou2017sentichange} or topics~\cite{Tsytsarau2014Topics,Thelwall2011topic}. Most of them are based on a two stage framework, i.e.first adopt a sentiment extraction tool such as SentiStrength~\cite{} to compute the sentiment score for an entity or topic, then conduct statistical analysis such as outlier detection to obtain sentiment spikes. 
-However, modeling public opinion for social incidents poses several challenges that haven't been addressed by previous research.
+Recently there is an increasing interest in tracking microblogging sentiments for entities~\cite{Giachanou2016sentichange,Giachanou2017sentichange} or topics~\cite{Tsytsarau2014Topics,Thelwall2011topic}. Most of them are based on a two stage framework, i.e.first adopt a sentiment extraction tool such as SentiStrength~\cite{sentistrength2010} to compute the sentiment score for an entity or topic, then conduct statistical analysis such as outlier detection to obtain sentiment spikes. However, modeling public opinion for social incidents poses several challenges that haven't been addressed by previous research.
 
 %mixed feelings
 The first challenge is to \textbf{identify entity-level sentiment}. 
 As a social incident often involves several entities (i.e. people or organizations), extracting entity level sentiment is important.
-For example, in xxx, people negative sentiment to xxx, positive sentiment to xxx %running example
-Existing research utilizes coarse-grained analysis to obtain an averaged sentiment for an event without seperating different entities, which is clearly problematic.
-This is not a trivial problem because the length limit of microblogs encourge people to use short and informal expressions.
-As in Fig.~\ref{}, multiple opinion expressions are put in a sentence which target towards different entities. %running example
+For example, as shown in Fig~\ref{fig:tweet}, in ``My father is Li Gang'' incident, people negative sentiment to the perpetrator and Li Gang, positive sentiment to the girl who was killed. Existing research utilizes coarse-grained analysis to obtain an averaged sentiment for an event without seperating different entities, which is clearly problematic.%second layer
+This is not a trivial problem because the length limit of microblogs encourage people to use short and informal expressions.
+As in Fig.~\ref{fig:tweet}, multiple opinion expressions are put in a sentence which target towards different entities. %running example, figure circle 
 To address this challenge, it is helpful to embed proximity information to enhance entity-level sentiment extraction accuracy. 
 
 %static lexicon
 The second challenge is to \textbf{build incident specific sentiment lexicon}. 
 In the literature there are two types of sentiment extraction methods: supervised and lexicon based.
 Due to the dynamic nature of social incidents (i.e. happen suddenly, constantly changing), it is infeasible to label real-time training corpus. 
-Lexicon based sentiment extraction tools are widely adopted~\cite{}.They select a collection of words with negative and positive sentiments to compute the final polarity of sentiments. %describe lexicon based methods
-The problem is that one lexicon is not suitable for all incidents. 
-For example, in Figure~\ref{},  %running example, hard?
-It is neccessary to construct a ``global'' vocabulary and an incident specific lexicon without supervision.
+Lexicon based sentiment extraction tools are widely adopted~\cite{sentistrength2010,Thelwall2012lexicon,Ortega2013lexicon}. They select a collection of words with negative and positive sentiments to compute the final polarity of sentiments. These methods do not
+require a training dataset. The accuracy of the classification depends on the quality of the lexicon and the rules for calculating sentiment polarity. The problem is that one lexicon is not suitable for all incidents. 
+For example, in Figure~\ref{fig:tweet}, We found that 
+ So it is necessary to construct a ``global'' vocabulary and an incident specific lexicon without supervision.
 
 %background evolution + shift
 The third challenge is to \textbf{simutanously model the evolution of opinion and opinion shift}.
-In previous work, researchers mostly depend on statistical analysis to detect opinion shift or sentiment spikes from the background~\cite{}.
+In previous work, researchers mostly depend on statistical analysis to detect opinion shift or sentiment spikes from the background~\cite{Giachanou2016sentichange,Giachanou2017sentichange,Giachanou2016sentitime}.
 We argue here that simply detecting outliers is not sufficient.
 The fact that events are continuously changing causes changing responses in public opinions.
-Thus the evolution of the bacground is largely overlooked.
+Thus the evolution of the background is largely overlooked.
+%running example
 In this article we propose a probabilistic model that simultaneously model the evolution of background opinion and the opinion shifts.
 
 %contributions
@@ -89,19 +99,28 @@ In the model aspect, we propose to simutanously model the evolution of opinion a
 This paper is organized as follows. We briefly survey the related work in Sec.~\ref{sec:related}. In Sec.~\ref{sec:problem definition} to Sec.~\ref{sec:public opinion model}, we describe the methodology. We present and analyze the experimental results on a real data set in Sec.~\ref{sec:Experiment}. We conclude our work and suggest future directions in Sec.~\ref{sec:conclusion}.
 
 \section{Related Work}\label{sec:related}
-\textbf{Sentiment Tracking on Microblogs} has received considerable attention from both academy and industry.
- Johan Bollen et al. used Profile of Mood States(POMS) to measure the six individual dimensions of sentiments, trying to find a quantitative relationship between public sentiment and major events such as society and economy~\cite{Bollen2011sentimentchange}. Xiaoran An et al. used a combination of techniques drawn from text mining, hierarchical sentiment analysis and time series methods to tracking emotions about climate change in twitter~\cite{An2014sentimentchange}. In general, tracking the evolution of sentiments and looking for sentiment changes can be divided into three steps. In the first step, we need to get the trend of sentiment evolution. Before the idea of using models to simulate sentiment evolution is proposed, there are two main ways to get the trend of sentiment evolution: sentiment extraction and analysis topics. Sentiment extraction refers to the use of sentiment extraction tools to statically extract sentiments at time points. Anastasia Giachanou et al. got the sentiment evolution of the topic by measuring the proportion of positive tweets and negative tweets in tweets related to the topic at time points~\cite{Giachanou2016sentitime}. The method of applying the topics refers to measuring the distribution of topics at different time points, and got the trend of sentiment evolution through the change of the topics. Shulong Tan et al. proposes a Foreground and Background LDA (FB-LDA), to distill foreground topics and filter out longstanding background topics. These foreground topics can give potential interpretations of the sentiment variations~\cite{Tan2014topic}. In the second step, we need to find the time points when the sentiment is mutated. Previous studies often used residuals to detect outliers. Anastasia Giachanou et al. calculate the difference between the actual sentiment value and the predicted sentiment value at a time point. If the difference exceeds the limit, we treat the point as an outlier~\cite{Giachanou2016sentitime}. The last step we have to analyze the reasons for the emotional mutation. Topics are often used to find the cause of emotional changes. Anastasia Giachanou et al. used the LDA model to extract topics from the time windows and use relative entropy to sort topics according to their contribution to sentiment spikes~\cite{Giachanou2016sentichange}. Shulong Tan et al proposed a Latent Dirichlet Allocation (LDA) based model, Foreground and Background LDA (FB-LDA), to distill foreground topics and filter out longstanding background topics. They thought foreground topics can give potential interpretations of the sentiment changes~\cite{Tan2014topic}.
+%sentiment tracking
+\textbf{Sentiment Tracking on Microblogs} has received considerable attention from both academy and industry~\cite{}.%all reference
+Most of existing work adopt a cascade framework, i.e. first sentiment extraction, second shift detection.~\cite{}.%2? + 3
+To extract sentiment, the collection of tweets are divided into numerous time slices, and compute the ratio of positive and negatie sentiments in a time slice~\cite{}, or . %2
+To detect sentiment shift, residual between actural and predicted sentiment value is computed in xxx, xxx, xxx~\cite{Giachanou2016sentitime}%3, model name
+Topical residual is incorporated inxx ~\cite{}%model system name
+A few utilizes an integrate framework ~\cite{}%integration 
 
-\subsection{Sentiment Analysis}
-Sentiment analysis has received a lot of attention. Supervised learning and lexicon-based methods are the two main methods of sentiment analysis~\cite{Ahmed2017SentiCR}.
+%sentiment analysis
+A fundamental block in sentiment tracking systems is \textbf{sentiment analysis}. 
+In the literature, there are two types of sentiment analysis algorithms: supervised  and lexicon-based~\cite{Ahmed2017SentiCR}.
+Preprocessing syntatic and semantic features have been proved to be the most critical part in training a good classifier~\cite{}. %
+Morover, since it is difficult to access large-scale training data, recently a few recent research explores the possibility of distant supervision~\cite{}. 
 
-Supervised learning method creates a training model based on training data to classify the sentiment polarity of sentences. Some of the most applied classifiers are the NLTK, Gradient Boosting Tree (GBT), Support
-Vector Machines(SVM), Logistic Regression (LR), Random Forest (RF) and so on. One of the first studies of this method is Go et al.used distant supervision to classify the tweets as either positive or negative~\cite{Go2009Supervisedlearning}. Barbosa and Feng use three different sentiment detection methods to mark tweets. If the three methods are different for a tweet, then delete the tweet and get training dataset of 200,000 tweets. They used meta-index and syntax features to train the classifiers~\cite{Barbosa2010Supervisedlearning}. Unlike Barbosa and Feng, Davidov et al. use emoji and punctuation in tweets to get training data and proposed a supervised learning method similar to  K-Nearest Neighbors(KNN) algorithm~\cite{Davidov2010Supervisedlearning}. One of the most used classifiers of supervised learning methods is Support Vector Machines(SVM), Bakliwal et al. used a SVM classifier. They tried different pre-processing techniques and found spelling correction, stemming, and stop-words removal improve the accuracy of classification~\cite{Bakliwal2012Supervisedlearning}. on the basis of Bakliwal's research, Kiritchenko et al. used a lot of sentiment features from lexicon related to twitter and proposed a linear-kernel SVM method~\cite{Kiritchenko2014Supervisedlearning}. Finally, in case of limited processing time, Aston et al. used different supervised learning methods to study sentiment classification problem in tweet data streams~\cite{Aston2014Supervisedlearning}.
+Due to the lack of training data, most researchers turn to lexicon based methods.%supervised not applicable 
+The first  SentiStrength, which is used as a baseline in xxxx~\cite{}.% reference claim 
+However, SentiStrength is not accurate enough due to ...%accurate or recall?
+xx improves the accuracy of sentistrength by~\cite{}, xx increases recall by xx~\cite{}  % 
+Recently, a few researchers xxx. Feng et al. proposed using connotation lexicons to enclose subtle dimensions of a word’s sentiment. They first define a seed lexicon and then they learn the connotation lexicon based on PageRank and HITS~\cite{Feng2011lexicon}.%not use static
+However, %drawback
 
-Lexicon-based methods is another major method in sentiment analysis. This method calculates the sentiment score of the sentence from a list of words containing sentiment words and corresponding sentiment values. The most famous lexicon-based approach is SentiStrength~\cite{sentistrength2010}, SentiStrength can not only effectively recognize the sentiment polarity of text, but also use emoji, negative words, degree words to improve the accuracy of classification. Then Thelwall et al. improved the SentiStrength. They added idioms to the lexicon and compared the results with the main supervised learning methods~\cite{Thelwall2012lexicon}. Ortega et al. proposed a three-step method for sentiment classification. First step is pre-processing, next is polarity detection, last step is sentiment classification by rules~\cite{Ortega2013lexicon}. Hu et al. proposed an unsupervised sentiment analysis method based on emotional signals to classify sentiment. Emotional signals were divided into two categories: emotion correlation and emotion indication. Experiments have shown the correctness of his proposed framework and the role of emotional signals in sentiment analysis~\cite{Hu2013lexicon}. The above methods are based on static lexicon. After that, many researchers began to consider dynamic lexicon.  Feng et al. proposed using connotation lexicons to enclose subtle dimensions of a word’s sentiment. They first define a seed lexicon and then they learn the connotation lexicon based on PageRank and HITS~\cite{Feng2011lexicon}.
 
-Our goal is to track changes in public opinion about social events. Therefore, the above two methods cannot be used in our research directly. Because supervised learning methods require a large amount of manually labeled data, we decided to use the lexicon-based approach for sentiment classification and proposed our improvements.
-\subsection{Sentiment Tracking On Microbloging}
 
 \section{Problem Definition}\label{sec:problem definition}
 Social events are planned by people, attended by people and that the media illustrating the events are captured by people~\cite{Papadopoulos2012SocialEvent}. So social events involve interactions between different entities. Social events are dynamic and occur in a limited time. Emotional changes contained in social events tend to be regular. These features result in sentiment analysis and sentiment tracking methods previously used on entities and topics that no longer apply to social events. We use a new opinion model to simulate the evolution of public opinion in social events and to find the time points when sentiments shift suddenly during the evolution. In order to achieve the best results of our model, we consider the impact of the entity on the results of sentiment analysis, and use the core lexicon and feature lexicon to construct a unique lexicon of each event to improve the accuracy of sentiment classification.
@@ -279,14 +298,20 @@ q(Z|\vec{y},a,b,c,d,\sigma^2) = q(\gamma|\hat{a},\hat{b}) q(\beta|\hat{c},\hat{d
 where $Z$ includes all hidden variables, $\hat{e_{t,n}}\in \Real^2 $ is a vector. 
 
 Then we implement the iterations over all hidden variables.
+
 \section{Experiment}\label{sec:Experiment}
 \subsection{Experimental Setup}
-We use the microblogging event data set. The corpus includes 683378 tweets for 6 social events, collected between 2016 and 2018, through the microblogging API using keyword matching. The tweets for each event are divided into news and corresponding comments. Details of the data set, including the description of each event, the number of news and comments are shown in Tab.~\ref{table:social event}.
+%crawl 
+The data set used in our experiment is crawled through weibo API, collected between 2016 and 2018.through the microblogging API using keyword matching. %...crawl
+The corpus includes 6 incidents, %top social incidents
+ The tweets for each event are divided into news and corresponding comments. Details of the data set, including the description of each event, the number of news and comments are shown in Tab.~\ref{table:social event}.
 
-In order to verify the advantages of the core lexicon and feature lexicon, our dataset contains some events with small corpus. In pre-processing, Repeated tweets, emoji expressions, http links and mentions (@somebody) are removed from the data set.
+In pre-processing, repeated tweets, emoji expressions, http links and mentions (@somebody) are removed from the data set.
+Segmentation %
+
 % \vspace{-0.6cm}
 \begin{table}[ht]
-\caption{Description of the data set}\label{table:social event}
+\caption{Statistics of the data set}\label{table:social event}
 \begin{center}
 \tiny
 \begin{tabular}{|l|l|l|l|}
@@ -305,13 +330,26 @@ WZXhospital   & 59501  & 2016/04/21 2016/09/11   & Wei Zexi died of fake medical
 % \vspace{-0.6cm}
 
 \subsection{Sentiment Lexicon Extraction}
-We first prove that the quality of the lexicon can be improved by the core lexicon and feature lexicon. For each event corpus, we use graphs to represent the corpus. We use the previously described methods to find the core nodes and feature nodes from the graph, and then use the corresponding words to build the core lexicon and feature lexicon.
+We first verify that the performance of lexicon construction.
 
-We choose precision, recall as evaluation metrics. The precision help us judge that how many words in the lexicon belong to sentiment words. The recall tell us the proportion of sentiment words in the lexicon to all sentiment words in the ground truth. The ground truth of sentiment words in manually generated. We compare our method with PMI on sentiment lexicon extraction. PMI is a commonly used method that extends the seed lexicon by calculating pointwise mutual information of candidate words and sentiment seeds. The results are shown in Tab.~\ref{table:core lexicon}
+%groundtruth
+The ground truth is the polarity (positive v.s. negative) of sentiment words.
+%pooling,3-5 comparative methods
+ in manually generated. % 3 judges, label 
+%majority vote
+
+
+We choose precision, recall as evaluation metrics. The precision help us judge that how many words in the lexicon belong to sentiment words. The recall tell us the proportion of sentiment words in the lexicon to all sentiment words in the ground truth. We compare our method with PMI on sentiment lexicon extraction. PMI is a commonly used method that extends the seed lexicon by calculating pointwise mutual information of candidate words and sentiment seeds. The results are shown in Tab.~\ref{table:core lexicon}
+
+% figure
+% x: #tweets
+% y: precision/recall/size
+% comparative methods: 3-5 
+%core + specific lexicon
 
 % \vspace{-0.6cm}
 \begin{table}[ht]
-\caption{Comparison the effect of Core lexicon and PMI}\label{table:core lexicon}
+\caption{Comparative  of Core lexicon and PMI}\label{table:core lexicon}
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|c|c|}
 \hline
@@ -329,7 +367,9 @@ SDhumiliation           & 17607                  & 0.4074    & 0.7714 & 56      
 % \vspace{-0.6cm}
 
 Observing from Tab.~\ref{table:core lexicon}, we can see that our proposed approach is more effective for sentiment lexicon extraction than PMI. Among all six events, the core lexicon approach has higher precision than PMI, and among the five events, the core lexicon approach has a higher recall than PMI. More importantly, as the corpus of events becomes smaller, the precision of PMI shows a downward trend. PMI's precision on the two events with the smallest corpus is only 44 percent and 40 percent. At the same time, the PMI recall remained stable. This shows that as the event corpus becomes smaller, PMI sacrifices precision in order to extract emotional words as much as possible, resulting in a much larger lexicon than the lexicon obtained by the core lexicon method. Compared with PMI, as the corpus of events becomes smaller, the precision and recall of the lexicon obtained by the core lexicon method is increasing. Therefore, the lexicon extracted by the core lexicon method has better quality, especially when the corpus of events is small.
+
 \subsection{Parameter Selection For Distance Function}
+%groundtruth
 Here we will get the form of the distance function and determine the parameters of the it through experiments. The experimental data set consisted of 2,000 tweets randomly selected from the corpus of six events. Manually mark the polarity of these tweets and determine the location of the entity by keyword. We use different distance functions to calculate the sentiment classification accuracy for the data set and systematically test a set of flxed $\sigma$ values from 1 to 30 in increments of 1. The results are shown in Fig.~\ref{fig:sigma}
 
 \vspace{-0.5cm}
@@ -341,13 +381,15 @@ Here we will get the form of the distance function and determine the parameters 
 \end{figure}
 
 First, it is clear that adding entity to the process of sentiment recognition can improve the accuracy of sentiment classification. Among the four kernel functions, the Cosine kernel function is less affected by sigma. The accuracy of sentiment classification corresponding to the other three kernel functions increases first and then decreases, and all three kernel functions get the optimal value when sigma is equal to 21. The Gaussian kernel function performs best. So we take the Gaussian kernel function as a form of the distance function and set the value of sigma to 21. Under such conditions, the sentiment classification accuracy of the data set reached 92.77 percent.
-\subsection{Evaluation of Sentiment Classification}
+
+\subsection{Evaluation of Sentiment Extraction}
 Here, we show the impact of using the core lexicon and distance functions on sentiment classification. Before the experiment, we suspected that the distance function is more advantageous for long texts, because if a sentence contains few sentiment words, the distance of the sentiment words to the entity no longer has a strong influence on the classification results. In order to validate our conjecture, we randomly extracted three different lengths of comments from the event corpus to form three data sets. Manually annotate the emotional polarity of tweets in the dataset.
 
 We compared our method to SentiStrength, SentiStrength-SE~\cite{Rakibul2017SentiStrength-SE} and SentCR. SentiStrength is a classic algorithm for sentiment classification. SentiStrength-SE has improved SentiStrength, this method designs different lexicon for events in different fields. SentCR is a supervised learning method designed for code review comments. We compared the sentiment classification accuracy of these four methods on positive and negative data set, and compared the impact of the length of the tweets on the classification results. The results are shown in Tab.~\ref{table:sentiment classification}
 
 According to Table~\ref{table:sentiment classification}, Our approach has the best performance. On all dataset, our method's sentiment classification accuracy exceeds 80 percent, especially for negative dataset with tweets between 40 and 60 in length, the accuracy of our method is over 90 percent. There are many details in the table. We can see that except for SentCR, the accuracy of the other three methods on the positive dataset is lower than the accuracy on the negative dataset. This is because in our event, most of the comments contain a large number of negative words, but some of them are expressed in support of another person by expressing dislike of someone. Although there are many negative words in the tweet, the tweet still expresses positive emotions. Therefore, in our corpus, judging positive emotions is difficult to judge negative emotions. Despite this, our approach has achieved high accuracy on positive data sets. The accuracy of SentiCR remains stable because supervised learning methods are not affected by tweet semantics and structure. As the tweet grows longer, the accuracy of the our method using the distance function is significantly improved compared to the our method without using the distance function. So the distance function is more effective for long comments.
 
+%figure
 % \vspace{-0.6cm}
 \begin{table}[ht]
 \caption{Comparison of sentiment classification results}\label{table:sentiment classification}
@@ -360,8 +402,8 @@ According to Table~\ref{table:sentiment classification}, Our approach has the be
 SentiStrength                        & 0.3774      & 0.5808      & 0.2254       & 0.3906      & 0.3938       & 0.3622      \\ \hline
 SentiStrength-SE                     & 0.6014      & 0.6951      & 0.5040       & 0.5843      & 0.5752       & 0.6467      \\ \hline
 SentiCR                              & 0.7953      & 0.7855      & 0.7911       & 0.7005      & 0.7404       & 0.7861      \\ \hline
-Our method without distance function & 0.7279      & 0.7558      & 0.7517       & 0.7792      & 0.7477       & 0.7641      \\ \hline
-Our Method                           & 0.8477      & 0.8588      & 0.8539       & 0.8771      & 0.8862       & 0.9289      \\ \hline
+xxx & 0.7279      & 0.7558      & 0.7517       & 0.7792      & 0.7477       & 0.7641      \\ \hline
+xxx                           & 0.8477      & 0.8588      & 0.8539       & 0.8771      & 0.8862       & 0.9289      \\ \hline
 \end{tabular}
 \end{center}
 \end{table}
@@ -371,78 +413,20 @@ Our Method                           & 0.8477      & 0.8588      & 0.8539       
 \subsection{Evaluation of Public Opinion Model}
 Here, we show the advantages of our public opinion model in simulating the evolution of public opinion. We set 19 time points for each event, with the same interval between each two time points. We use the core lexicon and feature lexicon to build a lexicon for each event, and calculate the sentiment polarity of each tweet in the corpus corresponding to each time point by the distance function.
 
-Our model can get two parameters that change over time. The first is $\alpha$, which represents the distribution of background opinion in the event. The second is $e$, which represents the probability of a sudden change in public opinion at each time point. We did experiments on six events. The results are shown in Fig.~\ref{fig:alpha}
+%case study 
 
-\vspace{-0.5cm}
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\textwidth,height=1.6in]{alpha.eps}
-    \setlength{\abovecaptionskip}{-0.1cm}
-    \caption{Changes in the $\alpha$ value of six events}\label{fig:alpha}
-\end{figure}
 
-As we have considered, the $\alpha$ is smoothly and slowly changing in all six events, proving that the $\alpha$ value we get represents the distribution of background opinion in the event. It is worth noting that the areas of the $\alpha$ set of the six events are different. We explain this phenomenon in this way. According to our model, $\alpha$ represents the distribution of background opinions. Background opinions can be understood as people's first impression of an event. So the area where the $\alpha$ is concentrated represents the most direct feeling of people about the event. The $\alpha$ of WZXHospital, RYBabused, CFfall, and SDhumiliation is less than 0.5, indicating that anger is the public's first feeling. The $\alpha$ value of both JGmurder and HZbabysitter events is greater than 0.5, indicating that sympathy for the victim is the public's first feeling. These are in line with the actual situation.
-% \vspace{-0.6cm}
-\begin{table}
-\caption{Changes in the $e$ value of six events}\label{table:beta}
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|}
-\hline
-Events & JGM                                  & HZB                                  & WZX                                  & RYB                                  & CFF                                  & SDH                                  \\ \hline
-1      & 0.5388                               & 0.1805                               & 0.5759                               & \textbf{0.8387}                      & 0.5220                               & \textbf{0.8076}                      \\
-2      & 0.6255                               & 0.2838                               & 0.9631                               & 0.6778                               & \textbf{0.8634}                      & 0.7964                               \\
-3      & 0.6825                               & 0.1025                               & 0.5307                               & \textbf{0.9126}                      & 0.7040                               & 0.7085                               \\
-4      & 0.2577                               & \textbf{0.8634}                      & 0.4609                               & 0.6722                               & 0.3668                               & 0.7096                               \\
-5      & 0.5414                               & 0.3567                               & 0.5923                               & \textbf{0.8385}                      & 0.6018                               & 0.4503                               \\
-6      & 0.4088                               & 0.3920                               & 0.6475                               & 0.3150                               & 0.3581                               & 0.7098                               \\
-7      & \textbf{0.8000}                      & 0.3774                               & 0.4648                               & 0.6072                               & 0.5220                               & \textbf{0.8714}                      \\
-8      & 0.6962                               & 0.3657                               & 0.4642                               & 0.3500                               & 0.7457                               & 0.7350                               \\
-9      & 0.6357                               & 0.3413                               & \textbf{0.8837}                      & 0.6136                               & \textbf{0.8077}                      & \textbf{0.8657}                      \\
-10     & 0.5559                               & 0.4452                               & 0.4302                               & 0.2514                               & 0.5572                               & 0.7002                               \\
-11     & 0.5839                               & 0.7599                               & 0.5482                               & 0.4574                               & 0.4413                               & 0.6948                               \\
-12     & \multicolumn{1}{l|}{\textbf{0.8978}} & \multicolumn{1}{l|}{\textbf{0.8244}} & \multicolumn{1}{l|}{0.5917}          & \multicolumn{1}{l|}{0.7588}          & \multicolumn{1}{l|}{\textbf{0.8413}} & \multicolumn{1}{l|}{0.7055}          \\
-13     & \multicolumn{1}{l|}{0.6685}          & \multicolumn{1}{l|}{0.6862}          & \multicolumn{1}{l|}{0.4646}          & \multicolumn{1}{l|}{0.7059}          & \multicolumn{1}{l|}{0.3359}          & \multicolumn{1}{l|}{0.6687}          \\
-14     & \multicolumn{1}{l|}{0.6264}          & \multicolumn{1}{l|}{0.6308}          & \multicolumn{1}{l|}{0.1255}          & \multicolumn{1}{l|}{\textbf{0.8872}} & \multicolumn{1}{l|}{0.4243}          & \multicolumn{1}{l|}{0.2729}          \\
-15     & \multicolumn{1}{l|}{0.5670}          & \multicolumn{1}{l|}{0.6828}          & \multicolumn{1}{l|}{0.7100}          & \multicolumn{1}{l|}{0.4449}          & \multicolumn{1}{l|}{0.1022}          & \multicolumn{1}{l|}{\textbf{0.9411}} \\
-16     & \multicolumn{1}{l|}{0.7050}          & \multicolumn{1}{l|}{0.3845}          & \multicolumn{1}{l|}{\textbf{0.8249}} & \multicolumn{1}{l|}{0.4069}          & \multicolumn{1}{l|}{\textbf{0.9066}} & \multicolumn{1}{l|}{0.7977}          \\
-17     & \multicolumn{1}{l|}{\textbf{0.9011}} & \multicolumn{1}{l|}{0.6584}          & \multicolumn{1}{l|}{0.6451}          & \multicolumn{1}{l|}{\textbf{0.9762}} & \multicolumn{1}{l|}{0.5220}          & \multicolumn{1}{l|}{0.3423}          \\
-18     & \multicolumn{1}{l|}{0.7414}          & \multicolumn{1}{l|}{\textbf{0.8894}} & \multicolumn{1}{l|}{0.7647}          & \multicolumn{1}{l|}{0.4694}          & \multicolumn{1}{l|}{0.1679}          & \multicolumn{1}{l|}{0.1547}          \\
-19     & \multicolumn{1}{l|}{\textbf{0.8180}} & \multicolumn{1}{l|}{0.7715}          & \multicolumn{1}{l|}{0.5557}          & \multicolumn{1}{l|}{0.1900}          & \multicolumn{1}{l|}{0.3651}          & \multicolumn{1}{l|}{0.7433}         
-\end{tabular}
-\end{center}
-\end{table}
 % \vspace{-0.6cm}
 
+% precision
+%comparative study
+%overall 
 We show the changes of the parameter $e$ in the Tab.~\ref{table:beta} The parameter $e$ represents the probability of a sudden change in public opinion at each time point. So we use the parameter $e$ to find the shift points in the sentiment change. For each event, we use the time point where the value of e is greater than 0.8 as the shift point. The ground truth of sentiment changes is obtained manually, we analyze the events at all time points and select the time points we believe can cause a sudden change in public opinion. We compare our model to the ground truth. The results are shown in Tab.~\ref{table:result}. Y represents this time point is considered to be a sentiment shift point. N is the opposite. As shown in Table~\ref{table:result}, The ground truth selected a total of 23 time points as the sentiment shift point. In the case that our model only selected 20 time points, 18 time points of them were considered correct by ground truth. This proves the validity of our model.
 % \vspace{-0.6cm}
 \begin{table}[ht]
-\caption{Comparison of our model and Ground Truth}\label{table:result}
+\caption{Comparative performance of shift detection}\label{table:result}
 \begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline
-\multirow{3}{*}{Time Points} & \multicolumn{12}{c|}{Events}                                                                                                                                    \\ \cline{2-13} 
-                             & \multicolumn{2}{c|}{JGM} & \multicolumn{2}{c|}{HZB} & \multicolumn{2}{c|}{WZX} & \multicolumn{2}{c|}{RYB} & \multicolumn{2}{c|}{CFF} & \multicolumn{2}{c|}{SDH} \\ \cline{2-13} 
-                             & GT          & OM         & GT          & OM         & GT          & OM         & GT          & OM         & GT          & OM         & GT          & OM         \\ \hline
-1                            & N           & N          & N           & N          & N           & N          & Y           & Y          & N           & N          & Y           & Y          \\
-2                            & N           & N          & N           & N          & Y           & Y          & N           & N          & Y           & Y          & N           & N          \\
-3                            & N           & N          & N           & N          & N           & N          & Y           & Y          & N           & N          & N           & N          \\
-4                            & N           & N          & Y           & Y          & N           & N          & N           & N          & N           & N          & N           & N          \\
-5                            & Y           & Y          & N           & N          & N           & N          & Y           & Y          & N           & N          & N           & N          \\
-6                            & N           & N          & N           & N          & N           & N          & N           & N          & N           & N          & N           & N          \\
-7                            & N           & Y          & N           & N          & N           & N          & N           & N          & N           & N          & Y           & Y          \\
-8                            & N           & N          & N           & N          & N           & N          & N           & N          & N           & N          & N           & N          \\
-9                            & N           & N          & Y           & Y          & Y           & Y          & N           & N          & Y           & Y          & Y           & Y          \\
-10                           & N           & N          & N           & N          & N           & N          & N           & N          & N           & N          & N           & N          \\
-11                           & N           & N          & Y           & N          & N           & N          & N           & N          & N           & N          & N           & N          \\
-12                           & Y           & Y          & N           & N          & N           & N          & N           & N          & Y           & Y          & N           & N          \\
-13                           & N           & N          & N           & N          & N           & N          & N           & N          & N           & N          & N           & N          \\
-14                           & N           & N          & N           & N          & N           & N          & Y           & Y          & Y           & N          & N           & Y          \\
-15                           & N           & N          & N           & N          & N           & N          & N           & N          & N           & N          & N           & N          \\
-16                           & N           & N          & N           & N          & N           & N          & N           & N          & Y           & Y          & N           & N          \\
-17                           & Y           & Y          & N           & N          & Y           & Y          & Y           & Y          & N           & N          & N           & N          \\
-18                           & N           & N          & Y           & Y          & N           & N          & N           & N          & N           & N          & N           & N          \\
-19                           & Y           & Y          & N           & N          & N           & N          & N           & N          & N           & N          & N           & N         
-\end{tabular}
+
 \end{center}
 \end{table}
 % \vspace{-0.6cm}
