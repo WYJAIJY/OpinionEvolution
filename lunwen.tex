@@ -41,12 +41,14 @@ Tracking opinion over time is a powerful tool that can be used to detect the pos
 %
 \section{Introduction}
 %Motivation
-Nowadays Microblogging has become the major platform for Chinese people to publish information and share opinions about social incidents. Public opinion on Microblogging platforms has greatly influenced the Chinese society. For example, even change investigation and judicial outcome. In the famous ``My father is Li Gang'' incident, the son of an officer killed an innocent female college student with no regrets. This event caused great anger on the Microblogging, which made the criminals got the punishment he deserved. Public opinion is appealing for individuals, business organizations, researchers, and government officials.%general conclusion%http://www.chinadaily.com.cn/china/2011-03/02/content_12099500.htm
+Nowadays Microblogging has become the major platform for Chinese people to publish information and share opinions about social incidents. Public opinion on Microblogging platforms has greatly influenced the Chinese society, sometimes even change the investigation and judicial outcome~\cite{{Cheung2014Battle}}. 
+For example, in the ``Jiang Ge'' incident, a Chinese female student was killed in Japan, and her friend witnessed all this without providing any help. This event caused great anger on the Microblogging, which made the criminals got the punishment he deserved. %change 
+The power of public opinion in Microblogging space make it appealing to analyze sentiment evolution for social incidents in microblogs for individuals, enterprises, NGO organizations , researchers, and government officials and so on.
 
 %Problem studied
 In this paper, to facilitate understanding of public opinions, we focus on the problem of modeling sentiment evolution for social incidents. 
-Given a sequence microblogging comments on one socia incident, our goal is to reveal the evolution patterns of public opinions, identify the significant opinion shifts, and explain cause of the opinion shifts. 
-As shown in Fig.~\ref{fig:tweet}, for comments on the "My Dad is Li Gang", we anlayze the public opinion and visualize % .
+Given a sequence microblogging comments related to any social incident, our goal is to reveal the sentiment evolution pattern related to the involved entities in this incident and identify the significant sentiment shifts. 
+As shown in Fig.~\ref{fig:tweet}, for comments on the "Jiang Ge" incident, we analyze the public opinion and visualize. %more specific, better describe the incident first
 
 %first layer: input sequence from left to right, balanced text size
 %input: background tweets in each time slice 1~2
@@ -56,76 +58,80 @@ As shown in Fig.~\ref{fig:tweet}, for comments on the "My Dad is Li Gang", we an
 
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\textwidth,height=3.5in]{tweet2.eps}
+    \includegraphics[width=1.0\textwidth,height=3.5in]{tweet.eps}
     \setlength{\abovecaptionskip}{-0.1cm}
-    \caption{Comments from ``My father is Li Gang'' incident and reflected characteristics of social incident}\label{fig:tweet}
+    \caption{Comments from ``Jiang Ge'' incident and reflected characteristics of social incident}\label{fig:tweet}
 \end{figure}
 
 %Related work
-Recently there is an increasing interest in tracking microblogging sentiments for entities~\cite{Giachanou2016sentichange,Giachanou2017sentichange} or topics~\cite{Tsytsarau2014Topics,Thelwall2011topic}. Most of them are based on a two stage framework, i.e.first adopt a sentiment extraction tool such as SentiStrength~\cite{sentistrength2010} to compute the sentiment score for an entity or topic, then conduct statistical analysis such as outlier detection to obtain sentiment spikes. However, modeling public opinion for social incidents poses several challenges that haven't been addressed by previous research.
+Recently there is an increasing interest in tracking microblogging sentiments for entities~\cite{Giachanou2016sentichange,Giachanou2017sentichange} or topics~\cite{Tsytsarau2014Topics,Thelwall2011topic}. Most of them are based on a two stage framework, i.e. first adopt a sentiment extraction tool such as SentiStrength~\cite{sentistrength2010} to compute the sentiment score for an entity or topic, then conduct statistical analysis such as outlier detection to obtain sentiment spikes. However, modeling public opinion for social incidents poses several challenges that haven't been addressed by previous research.
 
 %mixed feelings
 The first challenge is to \textbf{identify entity-level sentiment}. 
 As a social incident often involves several entities (i.e. people or organizations), extracting entity level sentiment is important.
-For example, as shown in Fig~\ref{fig:tweet}, in ``My father is Li Gang'' incident, people negative sentiment to the perpetrator and Li Gang, positive sentiment to the girl who was killed. Existing research utilizes coarse-grained analysis to obtain an averaged sentiment for an event without seperating different entities, which is clearly problematic.%second layer
+For example, as shown in Fig~\ref{fig:tweet}, in ``Jiang Ge'' incident, people has negative sentiment to the Liu Xin, a person who witnessed her friend being killed and indifferent, positive sentiment to the Jiang Ge's mom. % redundant
+Existing research utilizes coarse-grained analysis to obtain an averaged sentiment for an event without separating different entities, which is clearly problematic.%second layer
 This is not a trivial problem because the length limit of microblogs encourage people to use short and informal expressions.
-As in Fig.~\ref{fig:tweet}, multiple opinion expressions are put in a sentence which target towards different entities. %running example, figure circle 
+As in Fig.~\ref{fig:tweet}, multiple opinion expressions are put in a sentence which targets towards different entities. %running example, figure circle, as shown in ?? 
 To address this challenge, it is helpful to embed proximity information to enhance entity-level sentiment extraction accuracy. 
 
 %noisy lexicon
-The second challenge is to \textbf{filter accurate lexicon}. 
+The second challenge is to \textbf{filter an accurate lexicon}. 
 In the literature there are two types of sentiment extraction methods: supervised and lexicon based.
 Due to the dynamic nature of social incidents (i.e. happen suddenly, constantly changing), it is infeasible to label real-time training corpus. %
-Lexicon based sentiment extraction tools are widely adopted~\cite{sentistrength2010,Thelwall2012lexicon,Ortega2013lexicon}. They select a collection of words with negative and positive sentiments to compute the final polarity of sentiments. These methods do not
-require a training dataset. The accuracy of the classification depends on the quality of the lexicon and the rules for calculating sentiment polarity. The problem is that one lexicon is too general and noisy %noisy
-For example, in Figure~\ref{fig:tweet}, We found that 
- So it is necessary to construct a minimal ``global'' vocabulary with high precision and an incident specific lexicon without supervision.
+Lexicon based sentiment extraction is widely adopted~\cite{sentistrength2010,Thelwall2012lexicon,Ortega2013lexicon}. 
+A lexicon is a collection of words with negative and positive sentiments to compute the final polarity of sentiments. 
+Lexicon based methods do not require a training dataset and are easy to implement. 
+However, the problem is that using one lexicon for all incidents is too general and noisy. %noisy
+For example, in Figure~\ref{fig:tweet}, a general lexicon consists of 13 sentiment words (in blue), while four of them (in red) are irrelevant to this incident. Including them in the lexicon will harm the performance of sentiment extraction.
+Hence it is necessary to construct a minimal ``global'' vocabulary with high precision and an incident specific lexicon without supervision.
 
 %background evolution + shift
-The third challenge is to \textbf{simutanously model the evolution of opinion and opinion shift}.
-In previous work, researchers mostly depend on statistical analysis to detect opinion shift or sentiment spikes from the background~\cite{Giachanou2016sentichange,Giachanou2017sentichange,Giachanou2016sentitime}.
-We argue here that simply detecting outliers is not sufficient.
-The fact that events are continuously changing causes changing responses in public opinions.
-Thus the evolution of the background is largely overlooked.
-%running example
+The third challenge is to \textbf{simutanously model the evolution of sentiment background and sentiment shift}.
+In previous work, researchers mostly depend on statistical analysis such as outlier detection to detect sentiment spikes~\cite{Giachanou2016sentichange,Giachanou2017sentichange,Giachanou2016sentitime}.
+Such an method is not sufficient, because the evolution of the background is largely overlooked.
+The fact that events are continuously changing causes changing responses in public opinions. Hence sentiment shift should be distinguished with the evolution patterns of background sentiment.  
+For example, in Figure~\ref{fig:tweet}, the background sentiment towards Jiangge's mom is an increasing trend of positive sentiment. Revealing this evolution pattern marks the significance of sentiment shift at the third time point. %running example
 In this article we propose a probabilistic model that simultaneously model the evolution of background opinion and the opinion shifts.
 
 %contributions
 Our contributions are three folds. 
 We investigate the impact of proximity information in obtaining entity-level sentiment extraction.
 We design an efficient algorithm to extract global lexicon and incident specific lexicon.
-In the model aspect, we propose to simutanously model the evolution of opinion and opinion shift
+In the model aspect, we propose to simutanously model the evolution of opinion and opinion shift.
 
 This paper is organized as follows. We briefly survey the related work in Sec.~\ref{sec:related}. In Sec.~\ref{sec:problem definition} to Sec.~\ref{sec:public opinion model}, we describe the methodology. We present and analyze the experimental results on a real data set in Sec.~\ref{sec:Experiment}. We conclude our work and suggest future directions in Sec.~\ref{sec:conclusion}.
-
 \section{Related Work}\label{sec:related}
 %sentiment tracking
-\textbf{Sentiment Tracking on Microblogs} has received considerable attention from both academy and industry~\cite{}.%all reference
-Most of existing work adopt a cascade framework, i.e. first sentiment extraction, second shift detection.~\cite{}.%2? + 3
-To extract sentiment, the collection of tweets are divided into numerous time slices, and compute the ratio of positive and negatie sentiments in a time slice~\cite{}, or . %2
-To detect sentiment shift, residual between actural and predicted sentiment value is computed in xxx, xxx, xxx~\cite{Giachanou2016sentitime}%3, model name
-Topical residual is incorporated inxx ~\cite{}%model system name
-A few utilizes an integrate framework ~\cite{}%integration 
+\textbf{Sentiment Tracking on Microblogs} has received considerable attention from both academy and industry~\cite{Giachanou2016sentichange,Giachanou2017sentichange,Giachanou2016sentitime,An2014sentimentchange,Bollen2011sentimentchange,Tan2014topic,Montero2016sentimentchange}. Most of existing work adopt a cascade framework, i.e. in the first step sentiment of each tweet is extracted, in the second step sentiment shift is detected~\cite{Giachanou2016sentichange,Giachanou2017sentichange,Giachanou2016sentitime,An2014sentimentchange,Bollen2011sentimentchange,Tan2014topic}. To extract sentiment, the collection of tweets are divided into numerous time slices, and the ratio of positive and negatie sentiments is computed in a time slice~\cite{Giachanou2017sentichange,Giachanou2016sentitime,An2014sentimentchange,Bollen2011sentimentchange}. 
+To detect sentiment shift, residual between actural and predicted sentiment value is the most commonly adopted measurment~\cite{Giachanou2016sentichange,Giachanou2016sentitime}. 
+Furthermore, topic information is incorporated in recent studies. Sentiment change is represented by topic changes in~\cite{Tan2014topic}, an integrate framework based on empirical heuristics is utilized in~\cite{Montero2016sentimentchange} to identify
+the emotional spikes and locate causes of spikes.%integration 
 
 %sentiment analysis
-A fundamental block in sentiment tracking systems is \textbf{sentiment analysis}. 
-In the literature, there are two types of sentiment analysis algorithms: supervised  and lexicon-based~\cite{Ahmed2017SentiCR}.
-Preprocessing syntatic and semantic features have been proved to be the most critical part in training a good classifier~\cite{}. %
-Morover, since it is difficult to access large-scale training data, recently a few recent research explores the possibility of distant supervision~\cite{}. 
+A fundamental block in sentiment tracking systems is \textbf{sentiment analysis}. In the literature, there are two types of sentiment analysis algorithms: supervised learning and lexicon-based methods~\cite{Ahmed2017SentiCR}. \textbf{Supervised learning method} creates a training model based on training data
+to classify the sentiment polarity of sentences. Obtaining training data and selecting features are the two most important parts of this methods. 
+Emoji is often used to label sentiments of tweets~\cite{Go2009Supervisedlearning,Pak2010Supervisedlearning}. Hashtag is another major source to label training data~\cite{Papadopoulos2012SocialEvent}.
+But the accuracy of label by emoji is low. To overcome this issue, an ensemble of sentiment detection tools is employed to obtain the training data~\cite{Barbosa2010Supervisedlearning}. 
+The goal of supervision based methods is to classify the polarity of sentiments. To obtain a high precision, lexical features such asu nigrams and POS~\cite{Go2009Supervisedlearning,Davidov2010Supervisedlearning}, syntax features  such as  retweets, URLs, emoticons, and meta-features such as  POS tags, words’ polarity,~\cite{Barbosa2010Supervisedlearning} are obtained.
+Experiments have shown that classifiers benefit most from features which involve text polarity~\cite{Agarwal2010Supervisedlearning}.
 
-Due to the lack of training data, most researchers turn to lexicon based methods.%supervised not applicable 
-The first  SentiStrength, which is used as a baseline in xxxx~\cite{}.% reference claim 
-However, SentiStrength is not accurate enough due to ...%accurate or recall?
-xx improves the accuracy of sentistrength by~\cite{}, xx increases recall by xx~\cite{}  % 
-Recently, a few researchers xxx. Feng et al. proposed using connotation lexicons to enclose subtle dimensions of a word’s sentiment. They first define a seed lexicon and then they learn the connotation lexicon based on PageRank and HITS~\cite{Feng2011lexicon}.%not use static
-However, %drawback
+Due to the lack of training data, most researchers turn to \textbf{lexicon based methods}. 
+SentiStrength is the first open domain large-scale lexicon, which is used as a baseline in most sentiment detection algorithms like SentiStrength2~\cite{Thelwall2012lexicon}, SentiStrength-SE~\cite{Rakibul2017SentiStrength-SE}, and VADER~\cite{Hutto2014SSimproved}. 
+SentiSterength2~\cite{Thelwall2012lexicon} improves the accuracy of SentiStrength by adding idioms. 
+VADER~\cite{Hutto2014SSimproved} improves the accuracy of SentiStrength by grouping sentiment words on Twitter and manually filtering them. 
+SenciStrength-SE improves the recall of SentiStrength by designing different lexicons for different domains~\cite{Rakibul2017SentiStrength-SE}. 
+The above methods are based on static lexicons.
+Recently,we've seen an emerging attempt to construct dynamic lexicon. 
+For example, to enclose subtle dimensions of a word’s sentiment, a seed lexicon is defined in ~\cite{Feng2011lexicon} and connotation lexicon is retrieved based on PageRank and HITS. 
+However, such a connotation lexicon is still noisy and often not scalable, because it contains sentiment words that are not related to any entity in an event.
 
 
-
+%architecture
 \section{Problem Definition}\label{sec:problem definition}
 Social events are planned by people, attended by people and that the media illustrating the events are captured by people~\cite{Papadopoulos2012SocialEvent}. So social events involve interactions between different entities. Social events are dynamic and occur in a limited time. Emotional changes contained in social events tend to be regular. These features result in sentiment analysis and sentiment tracking methods previously used on entities and topics that no longer apply to social events. We use a new opinion model to simulate the evolution of public opinion in social events and to find the time points when sentiments shift suddenly during the evolution. In order to achieve the best results of our model, we consider the impact of the entity on the results of sentiment analysis, and use the core lexicon and feature lexicon to construct a unique lexicon of each event to improve the accuracy of sentiment classification.
 
-%architecture
+
 
 \section{Entity-level Sentiment Classification}\label{sec:sentiment classification}
 %framework
@@ -458,35 +464,45 @@ Mike Thelwall, Kevan Buckley, and Georgios Paltoglou.
 \newblock Sentiment in Twitter Events.
 \newblock In Journal, pp. 406-418, 2011.
 
-\bibitem{Hu2004lexicon}
-M. Hu and B. Liu.
-\newblock SMining and summarizing customer reviews.
-\newblock In SIGKDD ’04, 2014.
-
-\bibitem{Turney2002lexicon}
-P. D. Turney.
-\newblock "Thumbs up or thumbs down?: semantic orientation applied to unsupervised classification of reviews.
-\newblock   In 40th Annual  Meeting on Association for Computational Linguistics. 2002.
-
-\bibitem{entity1}
-John O’Neil.
-\newblock Entity Sentiment Extraction Using Text Ranking.
-\newblock In SIGIR ’12, pp. 1024-1024, 2012.
-
-\bibitem{entity2}
-Diana MaynardAdam Funk.
-\newblock Automatic Detection of Political Opinions in Tweets.
-\newblock In ESWC ’11, pp. 88-89, 2011.
-
 \bibitem{sentistrength2010}
 Mike Thelwall, Kevan Buckley, Georgios Paltoglou, Di Cai, and Arvid Kappas.
 \newblock Sentiment strength detection in short informal text.
 \newblock Journal of the Association for Information Science and Technology 61, 12 (2010), 2544–2558.
 
-\bibitem{Papadopoulos2012SocialEvent}
-S. Papadopoulos, E. Schinas, V. Mezaris, R. Troncy, and I. Kompatsiaris.
-\newblock s. Social event detection at mediaeval 2012: challenges, dataset and evaluation.
-\newblock In Proceedings of MediaEval 2012, 2012.
+\bibitem{Thelwall2012lexicon}
+Mike Thelwall, Kevan Buckley, and Georgios Paltoglou. 2012.
+\newblock Sentiment strength detection for the social web.
+\newblock J. Am. Soc. Inform. Sci. Technol. 63, 1 (2012), 163–173.
+
+\bibitem{Ortega2013lexicon}
+Reynier Ortega, Adrian Fonseca, and Andres Montoyo. 2013.
+\newblock SSA-UO: Unsupervised twitter sentiment analysis.
+\newblock In Proceedings of the 7th International Workshop on Semantic Evaluation.
+
+\bibitem{Giachanou2016sentitime}
+Anastasia Giachanou, Fabio Crestani. 2011.
+\newblock Tracking Sentiment by Time Series Analysis.
+\newblock In SIGIR ’16, pp. 1037-1040, 2016
+
+\bibitem{An2014sentimentchange}
+X. An, R. A. Ganguly, Y. Fang, B. S. Scyphers, M. A. Hunter, and G. J.
+\newblock Tracking Climate Change Opinions from Twitter Data. 
+\newblock In KDD’14: Workshop on Data Science for Social Good, 2014.
+
+\bibitem{Bollen2011sentimentchange}
+J. Bollen, A. Pepe, and H. Mao.
+\newblock Modeling Public Mood and Emotion : Twitter Sentiment and Socio-Economic Phenomena. 
+\newblock In ICWSM’11, pages 450-453, 2011.
+
+\bibitem{Tan2014topic}
+Shulong Tan, Yang Li, Huan Sun, Ziyu Guan.
+\newblock Interpreting the Public Sentiment Variations on Twitter. 
+\newblock In Journal’14, 2014.
+
+\bibitem{Montero2016sentimentchange}
+C. S. Montero, H. Haddad, M. Mozgovoy, and C. B. Ali.
+\newblock Detecting the likely causes behind the emotion spikes of influential twitter users. 
+\newblock In CICLing’16, 2016.
 
 \bibitem{Ahmed2017SentiCR}
 Toufique Ahmed, Amiangshu Bosu, Anindya Iqbal, Shahram Rahimi.
@@ -503,75 +519,51 @@ Luciano Barbosa and Junlan Feng.2010.
 \newblock Robust sentiment detection on twitter from biased and noisy data.
 \newblock In COLING ’10, pp. 36-44, 2010.
 
+\bibitem{Papadopoulos2012SocialEvent}
+Efthymios Kouloumpis, Theresa Wilson, and Johanna Moore. 2011.
+\newblock Twitter sentiment analysis: The good the bad and the omg!
+\newblock In ICWSM’11, pp. 538-541.
+
+\bibitem{Pak2010Supervisedlearning}
+Alexander Pak and Patrick Paroubek. 2010.
+\newblock Twitter as a corpus for sentiment analysis and opinion mining.
+\newblock In LREC ’10, pp. 1320-1326, 2010.
+
 \bibitem{Davidov2010Supervisedlearning}
 Dmitry Davidov, Oren Tsur, and Ari Rappoport.2010.
 \newblock Enhanced sentiment learning using twitter hashtags and smileys.
 \newblock In COLING ’10, pp. 241-249, 2010.
 
-\bibitem{Bakliwal2012Supervisedlearning}
-Akshat Bakliwal, Piyush Arora, Senthil Madhappan, Nikhil Kapre, Mukesh Singh, and Vasudeva Varma.2012.
-\newblock Mining sentiments from tweets.
-\newblock In WASSA ’12, pp. 11-18, 2012.
+\bibitem{Agarwal2010Supervisedlearning}
+Apoorv Agarwal, Boyi Xie, Ilia Vovsha, Owen Rambow, and Rebecca Passonneau. 2010.
+\newblock Sentiment analysis of twitter data.
+\newblock In LCM’11, pp. 30–38.
 
-\bibitem{Kiritchenko2014Supervisedlearning}
-Svetlana Kiritchenko, Xiaodan Zhu, and Saif M. Mohammad. 2014.
-\newblock Sentiment analysis of short informal texts.
-\newblock J. Artif. Intell. Res. 50 (2014), 723–762.
+\bibitem{Hutto2014SSimproved}
+C. J. Hutto and E. Gilbert. 2014.
+\newblock Vader: A parsimonious rule-based model for sentiment analysis of social media text.
+\newblock In AAAI’14.
 
-\bibitem{Aston2014Supervisedlearning}
-Nathan Aston, Jacob Liddle, and Wei Hu. 2014.
-\newblock Twitter sentiment in data streams with perceptron.
-\newblock  J.Comput. Commun. 2 (2014), 11–16.
-
-\bibitem{Thelwall2012lexicon}
-Mike Thelwall, Kevan Buckley, and Georgios Paltoglou. 2012.
-\newblock Sentiment strength detection for the social web.
-\newblock J. Am. Soc. Inform. Sci. Technol. 63, 1 (2012), 163–173.
-
-\bibitem{Ortega2013lexicon}
-Reynier Ortega, Adrian Fonseca, and Andres Montoyo. 2013.
-\newblock SSA-UO: Unsupervised twitter sentiment analysis.
-\newblock In Proceedings of the 7th International Workshop on Semantic Evaluation.
-
-\bibitem{Hu2013lexicon}
-Xia Hu, Jiliang Tang, Huiji Gao, and Huan Liu. 2013.
-\newblock SSA-UO: Unsupervised sentiment analysis with emotional signals.
-\newblock In WWW ’13, pp. 607-618, 2013.
+\bibitem{Rakibul2017SentiStrength-SE}
+Md Rakibul Islam and Minhaz F Zibran. 2017.
+\newblock Leveraging automated sentiment analysis in software engineering. 
+\newblock In Proceedings of the 14th International Conference on Mining Software Repositories. IEEE Press, 203-214.
 
 \bibitem{Feng2011lexicon}
 Song Feng, Ritwik Bose, and Yejin Choi. 2011.
 \newblock Learning general connotation of words using graph-based algorithms.
 \newblock In EMNLP ’11, pp. 1092-1103, 2011.
 
-\bibitem{Giachanou2016sentitime}
-Anastasia Giachanou, Fabio Crestani. 2011.
-\newblock Tracking Sentiment by Time Series Analysis.
-\newblock In SIGIR ’16, pp. 1037-1040, 2016
-
-\bibitem{Tan2014topic}
-Shulong Tan, Yang Li, Huan Sun, Ziyu Guan, Xifeng Yan, Jiajun Bu, Chun Chen, Xiaofei He.
-\newblock Interpreting the Public Sentiment Variations on Twitter. 
-\newblock In IEEE’14, pp. 1158-1170, 2014.
-
-\bibitem{An2014sentimentchange}
-X. An, R. A. Ganguly, Y. Fang, B. S. Scyphers, M. A. Hunter, and G. J.
-\newblock Tracking Climate Change Opinions from Twitter Data. 
-\newblock In KDD’14: Workshop on Data Science for Social Good, 2014.
-
-\bibitem{Bollen2011sentimentchange}
-J. Bollen, A. Pepe, and H. Mao.
-\newblock Modeling Public Mood and Emotion : Twitter Sentiment and Socio-Economic Phenomena. 
-\newblock In ICWSM’11, pages 450-453, 2011.
-
 \bibitem{Zhang2012corenodes}
 Tiantian Zhang, Bin Wu.
 \newblock A Method for Local Community Detection by Finding Core Nodes. 
 \newblock In Proceedings of the 2012 IEEE/ACM International Conference on Advances in Social Networks Analysis and Mining.
 
-\bibitem{Rakibul2017SentiStrength-SE}
-Md Rakibul Islam and Minhaz F Zibran. 2017.
-\newblock Leveraging automated sentiment analysis in software engineering. 
-\newblock In Proceedings of the 14th International Conference on Mining Software Repositories. IEEE Press, 203–214.
+\bibitem{Cheung2014Battle}
+Cheung A S Y. 
+\newblock The Battle of Microblogging for Legal Justice in China. 
+\newblock Ssrn Electronic Journal, 2014.
+
 
 \end{thebibliography}
 
