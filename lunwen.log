@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.10)  10 OCT 2018 10:04
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.10)  11 OCT 2018 11:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -690,18 +690,18 @@ Package: cite 2015/02/27  v 5.5
 ) (./lunwen.aux)
 \openout1 = `lunwen.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
 
 ABD: EveryShipout initializing macros
 (f:/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -776,30 +776,34 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 31.
 (f:/texlive/2016/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 37.
+Overfull \hbox (6.69305pt too wide) in paragraph at lines 34--41
+[]\OT1/cmr/m/n/9 Modeling sen-ti-ment evo-lu-tion for so-cial in-ci-dents in mi
+-croblogs
+ []
 
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 41.
 (f:/texlive/2016/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 37.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 41.
 Package epstopdf Info: Source file: <tweet.eps>
-(epstopdf)                    date: 2018-10-09 17:07:20
-(epstopdf)                    size: 7925186 bytes
+(epstopdf)                    date: 2018-10-10 19:41:54
+(epstopdf)                    size: 3653723 bytes
 (epstopdf)             Output file: <tweet-eps-converted-to.pdf>
-(epstopdf)                    date: 2018-10-10 09:32:13
-(epstopdf)                    size: 134112 bytes
+(epstopdf)                    date: 2018-10-11 09:33:38
+(epstopdf)                    size: 45311 bytes
 (epstopdf)             Command: <repstopdf --outfile=tweet-eps-converted-to.pdf
  tweet.eps>
-(epstopdf)             \includegraphics on input line 61.
+(epstopdf)             \includegraphics on input line 63.
 Package epstopdf Info: Output file is already uptodate.
 
-<tweet-eps-converted-to.pdf, id=4, 1034.86626pt x 1268.74pt>
+<tweet-eps-converted-to.pdf, id=4, 668.4975pt x 508.90125pt>
 File: tweet-eps-converted-to.pdf Graphic file (type pdf)
 
 <use tweet-eps-converted-to.pdf>
-Package pdftex.def Info: tweet-eps-converted-to.pdf used on input line 61.
-(pdftex.def)             Requested size: 347.12843pt x 252.9304pt.
+Package pdftex.def Info: tweet-eps-converted-to.pdf used on input line 63.
+(pdftex.def)             Requested size: 347.13107pt x 252.94354pt.
  [1
 
 {f:/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2 <./tweet-eps
@@ -812,10 +816,6 @@ Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
  [4]
-
-LaTeX Warning: Command \i invalid in math mode on input line 146.
-
-[5] [6]
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
@@ -871,53 +871,195 @@ Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
- [7]
-Overfull \hbox (10.91754pt too wide) in paragraph at lines 300--302
-\OML/cmm/m/it/10 p\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 y[]\OMS/cmsy/m/n/10 j\OML/c
-mm/m/it/10 s[]; []; ^^L\OT1/cmr/m/n/10 ) = [\OML/cmm/m/it/10 ^^Y\OT1/cmr/m/n/1
-0 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 )[](1 \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it
-/10 ^^Y\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 ))[]][][\OML/cmm/m/
-it/10 ^^L[]\OT1/cmr/m/n/10 (1 \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it/10 ^^L\OT1/cmr
-/m/n/10 )[]][]$
- []
-
-
-Overfull \hbox (7.53654pt too wide) in paragraph at lines 362--373
- [] 
+ [5] [6] [7]
+Overfull \hbox (11.46042pt too wide) in paragraph at lines 324--327
+[]\OT1/cmr/m/n/10 We com-pared our method to three state-of-the-art meth-ods. (
+1) Sen-tiStrength []:
  []
 
 [8]
-Underfull \vbox (badness 4254) has occurred while \output is active []
-
- [9]
 Package epstopdf Info: Source file: <sigma.eps>
-(epstopdf)                    date: 2018-10-08 17:51:51
-(epstopdf)                    size: 30066 bytes
+(epstopdf)                    date: 2018-10-10 19:41:54
+(epstopdf)                    size: 29842 bytes
 (epstopdf)             Output file: <sigma-eps-converted-to.pdf>
-(epstopdf)                    date: 2018-10-08 17:51:51
+(epstopdf)                    date: 2018-10-11 09:33:41
 (epstopdf)                    size: 13750 bytes
 (epstopdf)             Command: <repstopdf --outfile=sigma-eps-converted-to.pdf
  sigma.eps>
-(epstopdf)             \includegraphics on input line 386.
+(epstopdf)             \includegraphics on input line 369.
 Package epstopdf Info: Output file is already uptodate.
-
-<sigma-eps-converted-to.pdf, id=57, 421.575pt x 316.18124pt>
+ <sigma-eps-converted-to.pdf, id=52, 421.575pt x 316.18124pt>
 File: sigma-eps-converted-to.pdf Graphic file (type pdf)
 
 <use sigma-eps-converted-to.pdf>
-Package pdftex.def Info: sigma-eps-converted-to.pdf used on input line 386.
+Package pdftex.def Info: sigma-eps-converted-to.pdf used on input line 369.
 (pdftex.def)             Requested size: 173.56088pt x 115.62953pt.
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Package epstopdf Info: Source file: <cfzla.eps>
+(epstopdf)                    date: 2018-10-10 19:41:56
+(epstopdf)                    size: 19784 bytes
+(epstopdf)             Output file: <cfzla-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-10-11 09:33:43
+(epstopdf)                    size: 5833 bytes
+(epstopdf)             Command: <repstopdf --outfile=cfzla-eps-converted-to.pdf
+ cfzla.eps>
+(epstopdf)             \includegraphics on input line 389.
+Package epstopdf Info: Output file is already uptodate.
 
-Overfull \hbox (6.59933pt too wide) in paragraph at lines 396--397
-[]\OT1/cmr/m/n/10 We com-pared our method to Sen-tiStrength, SentiStrength-SE [
-21] and SentCR.
- []
+<cfzla-eps-converted-to.pdf, id=53, 421.575pt x 316.18124pt>
+File: cfzla-eps-converted-to.pdf Graphic file (type pdf)
 
-[10 <./sigma-eps-converted-to.pdf>]
+<use cfzla-eps-converted-to.pdf>
+Package pdftex.def Info: cfzla-eps-converted-to.pdf used on input line 389.
+(pdftex.def)             Requested size: 104.1381pt x 78.0995pt.
+Package epstopdf Info: Source file: <hhl.eps>
+(epstopdf)                    date: 2018-10-10 19:41:54
+(epstopdf)                    size: 19787 bytes
+(epstopdf)             Output file: <hhl-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-10-11 09:33:45
+(epstopdf)                    size: 5844 bytes
+(epstopdf)             Command: <repstopdf --outfile=hhl-eps-converted-to.pdf h
+hl.eps>
+(epstopdf)             \includegraphics on input line 394.
+Package epstopdf Info: Output file is already uptodate.
 
-LaTeX Warning: Reference `table:beta' on page 11 undefined on input line 432.
+<hhl-eps-converted-to.pdf, id=54, 421.575pt x 316.18124pt>
+File: hhl-eps-converted-to.pdf Graphic file (type pdf)
 
-[11]
+<use hhl-eps-converted-to.pdf>
+Package pdftex.def Info: hhl-eps-converted-to.pdf used on input line 394.
+(pdftex.def)             Requested size: 104.1381pt x 78.0995pt.
+Package epstopdf Info: Source file: <hzbm.eps>
+(epstopdf)                    date: 2018-10-10 19:41:54
+(epstopdf)                    size: 19785 bytes
+(epstopdf)             Output file: <hzbm-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-10-11 09:33:47
+(epstopdf)                    size: 5843 bytes
+(epstopdf)             Command: <repstopdf --outfile=hzbm-eps-converted-to.pdf 
+hzbm.eps>
+(epstopdf)             \includegraphics on input line 399.
+Package epstopdf Info: Output file is already uptodate.
+
+<hzbm-eps-converted-to.pdf, id=55, 421.575pt x 316.18124pt>
+File: hzbm-eps-converted-to.pdf Graphic file (type pdf)
+
+<use hzbm-eps-converted-to.pdf>
+Package pdftex.def Info: hzbm-eps-converted-to.pdf used on input line 399.
+(pdftex.def)             Requested size: 104.1381pt x 78.0995pt.
+Package epstopdf Info: Source file: <jg.eps>
+(epstopdf)                    date: 2018-10-10 19:41:54
+(epstopdf)                    size: 19765 bytes
+(epstopdf)             Output file: <jg-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-10-11 09:33:49
+(epstopdf)                    size: 5836 bytes
+(epstopdf)             Command: <repstopdf --outfile=jg-eps-converted-to.pdf jg
+.eps>
+(epstopdf)             \includegraphics on input line 404.
+Package epstopdf Info: Output file is already uptodate.
+
+<jg-eps-converted-to.pdf, id=56, 421.575pt x 316.18124pt>
+File: jg-eps-converted-to.pdf Graphic file (type pdf)
+
+<use jg-eps-converted-to.pdf>
+Package pdftex.def Info: jg-eps-converted-to.pdf used on input line 404.
+(pdftex.def)             Requested size: 104.1381pt x 78.0995pt.
+Package epstopdf Info: Source file: <sdrma.eps>
+(epstopdf)                    date: 2018-10-10 19:41:54
+(epstopdf)                    size: 19786 bytes
+(epstopdf)             Output file: <sdrma-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-10-11 09:33:51
+(epstopdf)                    size: 5838 bytes
+(epstopdf)             Command: <repstopdf --outfile=sdrma-eps-converted-to.pdf
+ sdrma.eps>
+(epstopdf)             \includegraphics on input line 409.
+Package epstopdf Info: Output file is already uptodate.
+
+<sdrma-eps-converted-to.pdf, id=57, 421.575pt x 316.18124pt>
+File: sdrma-eps-converted-to.pdf Graphic file (type pdf)
+
+<use sdrma-eps-converted-to.pdf>
+Package pdftex.def Info: sdrma-eps-converted-to.pdf used on input line 409.
+(pdftex.def)             Requested size: 104.1381pt x 78.0995pt.
+Package epstopdf Info: Source file: <wzx.eps>
+(epstopdf)                    date: 2018-10-10 19:41:54
+(epstopdf)                    size: 19787 bytes
+(epstopdf)             Output file: <wzx-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-10-11 09:33:53
+(epstopdf)                    size: 5844 bytes
+(epstopdf)             Command: <repstopdf --outfile=wzx-eps-converted-to.pdf w
+zx.eps>
+(epstopdf)             \includegraphics on input line 414.
+Package epstopdf Info: Output file is already uptodate.
+
+<wzx-eps-converted-to.pdf, id=58, 421.575pt x 316.18124pt>
+File: wzx-eps-converted-to.pdf Graphic file (type pdf)
+
+<use wzx-eps-converted-to.pdf>
+Package pdftex.def Info: wzx-eps-converted-to.pdf used on input line 414.
+(pdftex.def)             Requested size: 104.1381pt x 78.0995pt.
+Package epstopdf Info: Source file: <precision.eps>
+(epstopdf)                    date: 2018-10-10 19:41:56
+(epstopdf)                    size: 22875 bytes
+(epstopdf)             Output file: <precision-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-10-11 09:33:56
+(epstopdf)                    size: 7505 bytes
+(epstopdf)             Command: <repstopdf --outfile=precision-eps-converted-to
+.pdf precision.eps>
+(epstopdf)             \includegraphics on input line 424.
+Package epstopdf Info: Output file is already uptodate.
+
+<precision-eps-converted-to.pdf, id=59, 421.575pt x 316.18124pt>
+File: precision-eps-converted-to.pdf Graphic file (type pdf)
+
+<use precision-eps-converted-to.pdf>
+Package pdftex.def Info: precision-eps-converted-to.pdf used on input line 424.
+
+(pdftex.def)             Requested size: 138.84729pt x 104.1375pt.
+Package epstopdf Info: Source file: <recall.eps>
+(epstopdf)                    date: 2018-10-10 19:41:56
+(epstopdf)                    size: 22853 bytes
+(epstopdf)             Output file: <recall-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-10-11 09:33:58
+(epstopdf)                    size: 7484 bytes
+(epstopdf)             Command: <repstopdf --outfile=recall-eps-converted-to.pd
+f recall.eps>
+(epstopdf)             \includegraphics on input line 429.
+Package epstopdf Info: Output file is already uptodate.
+
+<recall-eps-converted-to.pdf, id=60, 421.575pt x 316.18124pt>
+File: recall-eps-converted-to.pdf Graphic file (type pdf)
+
+<use recall-eps-converted-to.pdf>
+Package pdftex.def Info: recall-eps-converted-to.pdf used on input line 429.
+(pdftex.def)             Requested size: 138.84729pt x 104.1375pt.
+ [9 <./sigma-eps-converted-to.pdf>]
+Package epstopdf Info: Source file: <perplexity.eps>
+(epstopdf)                    date: 2018-10-10 19:41:56
+(epstopdf)                    size: 23315 bytes
+(epstopdf)             Output file: <perplexity-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-10-11 09:34:00
+(epstopdf)                    size: 8052 bytes
+(epstopdf)             Command: <repstopdf --outfile=perplexity-eps-converted-t
+o.pdf perplexity.eps>
+(epstopdf)             \includegraphics on input line 439.
+Package epstopdf Info: Output file is already uptodate.
+
+<perplexity-eps-converted-to.pdf, id=69, 421.575pt x 316.18124pt>
+File: perplexity-eps-converted-to.pdf Graphic file (type pdf)
+
+<use perplexity-eps-converted-to.pdf>
+Package pdftex.def Info: perplexity-eps-converted-to.pdf used on input line 439
+.
+(pdftex.def)             Requested size: 173.56088pt x 115.62953pt.
+ [10 <./cfzla-eps-converted-to.pdf> <./hhl-eps-converted-to.pdf> <./hzbm-eps-co
+nverted-to.pdf> <./jg-eps-converted-to.pdf> <./sdrma-eps-converted-to.pdf> <./w
+zx-eps-converted-to.pdf> <./precision-eps-converted-to.pdf> <./recall-eps-conve
+rted-to.pdf>]
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
@@ -927,7 +1069,6 @@ Missing character: There is no ™ in font cmr9!
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
- [12]
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no “ in font cmr9!
@@ -940,6 +1081,7 @@ Missing character: There is no ™ in font cmr9!
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
+ [11 <./perplexity-eps-converted-to.pdf>]
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
@@ -976,44 +1118,39 @@ Missing character: There is no ™ in font cmr9!
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
- [13] (./lunwen.aux)
-
-LaTeX Warning: There were undefined references.
-
- )
+ [12] (./lunwen.aux) )
 (\end occurred inside a group at level 1)
 
 ### simple group (level 1) entered at line 1061 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 16608 strings out of 493013
- 342740 string characters out of 6136992
- 433114 words of memory out of 5000000
- 19805 multiletter control sequences out of 15000+600000
- 12883 words of font info for 49 fonts, out of 8000000 for 9000
+ 16669 strings out of 493013
+ 344140 string characters out of 6136992
+ 433949 words of memory out of 5000000
+ 19858 multiletter control sequences out of 15000+600000
+ 12716 words of font info for 48 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,10n,78p,1353b,2420s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,10n,78p,929b,2419s stack positions out of 5000i,500n,10000p,200000b,80000s
 <f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx
 10.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><f
 :/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><f:/texlive/
 2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><f:/texlive/2016/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><f:/texlive/2016/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmmi5.pfb><f:/texlive/2016/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmmi6.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmmi7.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mmi9.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb
-><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><f:/texli
-ve/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><f:/texlive/2016/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><f:/texlive/2016/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmr7.pfb><f:/texlive/2016/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmr9.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmsy10.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cms
-y7.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb><f:
-/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on lunwen.pdf (13 pages, 408278 bytes).
+nts/type1/public/amsfonts/cm/cmmi6.pfb><f:/texlive/2016/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmmi7.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmmi9.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mmib10.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
+><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><f:/texliv
+e/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><f:/texlive/2016/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><f:/texlive/2016/texmf-dist/font
+s/type1/public/amsfonts/cm/cmr9.pfb><f:/texlive/2016/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmsy10.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmsy7.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cms
+y9.pfb>
+Output written on lunwen.pdf (12 pages, 321680 bytes).
 PDF statistics:
- 136 PDF objects out of 1000 (max. 8388607)
- 97 compressed objects within 1 object stream
+ 179 PDF objects out of 1000 (max. 8388607)
+ 124 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 23 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 68 words of extra memory for PDF output out of 10000 (max. 10000000)
 
