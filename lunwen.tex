@@ -142,13 +142,13 @@ Our basic assumption is that the position of a sentiment word influences the per
 %notations
 \textbf{1. Gaussian kernel}
 \begin{equation}
-    k(l_i,l_j) = \exp\left[\frac{-(l_i-j)^2}{2\sigma^2}\right],
+    k(l_i,l_j) = \exp\left[\frac{-(l_i-l_j)^2}{2\sigma^2}\right],
 \end{equation}
 
 \textbf{2. Triangle kernel}
 \begin{equation}
 k(l_i,l_j)=\begin{cases}
-1-\frac{|l_i-j|}{\sigma} &\mbox{if $|l_i-j|\leq \sigma$}\\
+1-\frac{|l_i-l_j|}{\sigma} &\mbox{if $|l_i-l_j|\leq \sigma$}\\
 0 &\mbox{otherwise},
 \end{cases}
 \end{equation}
@@ -156,7 +156,7 @@ k(l_i,l_j)=\begin{cases}
 \textbf{3. Cosine (Hamming) kernel}
 \begin{equation}
 k(l_i,l_j)=\begin{cases}
-\frac{1}{2}\left[1+cos\left(\frac{|l_i-j|\cdot\pi}{\sigma}\right)\right] &\mbox{if $|l_i-j|\leq \sigma$}\\
+\frac{1}{2}\left[1+cos\left(\frac{|l_i-l_j|\cdot\pi}{\sigma}\right)\right] &\mbox{if $|l_i-l_j|\leq \sigma$}\\
 0 &\mbox{otherwise},
 \end{cases}
 \end{equation}
@@ -164,27 +164,27 @@ k(l_i,l_j)=\begin{cases}
 \textbf{4. Circle kernel}
 \begin{equation}
 k(l_i,l_j)=\begin{cases}
-\sqrt{1-\left(\frac{|l_i-j|^2}{\sigma}\right)} &\mbox{if $|l_i-j|\leq \sigma$}\\
+\sqrt{1-\left(\frac{|l_i-l_j|^2}{\sigma}\right)} &\mbox{if $|l_i-l_j|\leq \sigma$}\\
 0 &\mbox{otherwise},
 \end{cases}
 \end{equation}
 
 Note that all four of these kernel functions are governed by one parameter $\sigma$, which is tuned in the experiment.
-To obtain the proximity influence between an entity $e$ and a sentiment word $w$, we compute the average distance over its multple occurences, that is $d(e,w)=\sum_{l_i,l_j} k(l_i,l_j)/(n_i\times n_j)$, where $l_i$ is the location of each occurence of sentiment word $w$, $l_j$ is the location of each occurence of entity $e$, $n_i$ is the number of occurences of $w$ and $n_j$ is the number of occurences of $e$ %multiple occurence
+To obtain the proximity influence between an entity $e$ and a sentiment word $w$, we compute the average distance over its multiple occurrences, that is $d(e,w)=\sum_{l_i,l_j} k(l_i,l_j)/(n_i\times n_j)$, where $l_i$ is the location of each occurrence of sentiment word $w$, $l_j$ is the location of each occurrence of entity $e$, $n_i$ is the number of occurrences of $w$ and $n_j$ is the number of occurrences of $e$ %multiple occurrence
 
 \subsection{Entity Level Sentiment Polarity Classification}
 
-To classify the polarity $p_e(o)$ of sentiment towards an entity $e$ in a post $o$, we first obtain an entity-level sentiment value by calculating the average of the influence  on the entity from different sentiment words.
+To classify the polarity $p_e(o)$ of sentiment towards an entity $e$ in a post $o$, we first obtain an entity-level sentiment value by calculating the average of the influence  on the entity from different sentiment words. $n_i$ is the number of anti-words and $d_i$ is the sum of value of degree words between $i$th sentiment word and $(i-1)$th sentiment word. N is the number of sentiment words.
 
 %multiple entities
 
 
 \begin{equation}\label{equ:entitysentiment}
-s_i = (-1)^{n_i}\cdot d_i\cdot v_i\cdot k(l_i,l_j)
+s = \frac{\sum_{i=1}^{N}(-1)^{n_i}\cdot d_i\cdot v_i\cdot k(l_i,l_j)}{N}
 \end{equation}
 
 %
-if the sentiment value $s>0$, the sentiment polarity of this sentence is positive $p_e(o)=1$. if the sentiment value $s<0$, the sentiment polarity of this sentence is negative. %output 
+if the sentiment value $s>0$, the sentiment polarity of this sentence is positive $p_e(o)=1$. if the sentiment value $s<0$, the sentiment polarity of this sentence is negative $p_e(o)=0$. %output 
 
 
 \section{Public Sentiment Evolution Model}\label{sec:public opinion model}
@@ -197,26 +197,6 @@ Our assumptions are: (1) there is a background opinion distribution, i.e. how us
 (3) However sometimes a sudden shift on public opinions appears, i.e. triggered by sometimes a new piece of evidence.  
 
 Therefore, we present the following generation process, as illustrated in Figure~\ref{fig:opinion}.
-\begin{itemize}
-\item For time $t=0$, sample  for the public opinion distribution, $\alpha_0\sim \Gaussian(0,\sigma^2 I)$.
-\item For items $t=1: N$, sample $\alpha_{t+1}\sim \Gaussian(\alpha_t,\sigma^2)$. As $\Gaussian$ is a continuous and differentiable distribution, the evolution of background opinions is smooth and slow.
-\item Generate a global prior for the switch, i.e. a variable that controls how likely the public opinion to change, by $\gamma\sim Beta(a,b)$
-\end{itemize}
-\begin{itemize}
-%notations
-\item For each pieces of evidence
-\begin{itemize}
-\item Generate a switch $s_t \sim Bern(\gamma)$
-\item For each observation, generate $y_{t,n,m}\sim \begin{cases}
-Bern(\pi(\alpha_t)) & \text{ if } s_{t,n}= 1\\ 
-Bern(\beta) & \text{ if } s_{t,n}= 0 
-\end{cases}$
-\end{itemize}
-\end{itemize}
-
-
-%y -> p
-% M_n -> plate removed
 
 \begin{figure}[htp]
   \centering
@@ -255,8 +235,8 @@ Bern(\beta) & \text{ if } s_{t,n}= 0
 %            	\edge{alphat}{etat};
 
 	
-        \node[latent, below = 2 of alpha0 ] (y0) {$y_{0,n,m}$};
-            \node[latent, below = 2  of alphat ] (yt) {$y_{t,n,m}$};
+        \node[latent, below = 2 of alpha0 ] (y0) {$p_{0,n,m}$};
+            \node[latent, below = 2  of alphat ] (yt) {$p_{t,n,m}$};
        	\edge{s0}{y0};
 	\edge{alpha0}{y0};
 	    	\edge{st}{yt};
@@ -281,21 +261,49 @@ Bern(\beta) & \text{ if } s_{t,n}= 0
  \caption{Plate notation of the proposed opinion evolution model}\label{fig:opinion}
 \end{figure}
 
+\vspace{-0.6cm}
+\begin{itemize}
+\item For time $t=0$, sample  for the public opinion distribution, $\alpha_0\sim \Gaussian(0,\sigma^2 I)$.
+\item For items $t=1: N$, sample $\alpha_{t+1}\sim \Gaussian(\alpha_t,\sigma^2)$. As $\Gaussian$ is a continuous and differentiable distribution, the evolution of background opinions is smooth and slow.
+\item Generate a global prior for the switch, i.e. a variable that controls how likely the public opinion to change, by $\gamma\sim Beta(a,b)$
+\end{itemize}
+\begin{itemize}
+%notations
+\item For each pieces of evidence
+\begin{itemize}
+\item Generate a switch $s_t \sim Bern(\gamma)$
+\item For each observation, generate $p_{t,n,m}\sim \begin{cases}
+Bern(\pi(\alpha_t)) & \text{ if } s_{t,n}= 1\\ 
+Bern(\beta) & \text{ if } s_{t,n}= 0 
+\end{cases}$
+\end{itemize}
+\end{itemize}
+
+
+%y -> p
+% M_n -> plate removed
+
+
+
+\vspace{-0.6cm}
 \subsection{Inference}
 The joint probability is given by
 %notations
-\begin{eqnarray*}
-    p(\gamma,\beta,\alpha_0,\cdots,\alpha_T, \vec{s},\vec{y}, |a,b,c,d,\sigma^2) \\
-    =    p(\gamma|a,b) p(\beta|c,d)  p(\alpha_{0:T}|\sigma^2) \prod_t \prod_ n p(s_{t,n}|\gamma) \prod_m p(y_{t,n,m}|s_{t,n},\alpha_t,\beta) 
-\end{eqnarray*}
+\begin{multline}
+    p(\gamma,\beta,\alpha_0,\cdots,\alpha_T, \vec{s},\vec{p}, |a,b,c,d,\sigma^2) \\
+    =    p(\gamma|a,b) p(\beta|c,d)  p(\alpha_{0:T}|\sigma^2) \prod_t \prod_ n p(s_{t,n}|\gamma) \prod_m p(p_{t,n,m}|s_{t,n},\alpha_t,\beta) 
+\end{multline}
+\vspace{-0.6cm}
 
 
     
 In the nutshell, the optimization algorithm follows the framework of variational inference. Thus we make the following assumptions. 
 
+\vspace{-0.6cm}
 \begin{equation*}
-q(Z|\vec{y},a,b,c,d,\sigma^2) = q(\gamma|\hat{a},\hat{b}) q(\beta|\hat{c},\hat{d}) q(\alpha_{0:T}|\hat{\alpha_{0:T}})\prod_{t,n} q(s_{t,n}|\hat{e_{t,n}}) , 
+q(Z|\vec{p},a,b,c,d,\sigma^2) = q(\gamma|\hat{a},\hat{b}) q(\beta|\hat{c},\hat{d}) q(\alpha_{0:T}|\hat{\alpha_{0:T}})\prod_{t,n} q(s_{t,n}|\hat{e_{t,n}}) , 
 \end{equation*}
+\vspace{-0.6cm}
 
 Then we implement the iterations over all hidden variable, which is described in Algorithm~\ref{alg:Iterations}.
 
@@ -308,13 +316,18 @@ Then we implement the iterations over all hidden variable, which is described in
 \begin{algorithmic}
 %notations
 \WHILE{$\hat{e_{t,n}}_1$ and $\hat{e_{t,n}}_0$  not changed}
-\STATE $\hat{e_{t,n}}_1 = \phi(\hat{b})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m} (\phi(\hat{c})-\phi(\hat{c}+\hat{d})) +\sum_m (1-y_{t,n,m}) (\phi(\hat{d})-\phi(\hat{c}+\hat{d}))$\;
+\STATE $\hat{e_{t,n}}_1 = \phi(\hat{b})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m} (\phi(\hat{c})-\phi(\hat{c}+\hat{d})) +\sum_m (1-p_{t,n,m}) (\phi(\hat{d})-\phi(\hat{c}+\hat{d}))$\;
 \STATE $a \leftarrow  a+ \sum_{t,n} e_{t,n}$\;
 \STATE $\hat{b}  =  b+ \sum_{t,n} (1-e_{t,n})$\;
-\STATE $\hat{c}  =  c+ (1-e_{t,n}) \sum_{t,n,m} y_{t,n,m}$\;
-\STATE $\hat{d}  =  d+ (1-e_{t,n}) \sum_{t,n,m} (1-y_{t,n,m})$\;
+\STATE $\hat{c}  =  c+ (1-e_{t,n}) \sum_{t,n,m} p_{t,n,m}$\;
+\STATE $\hat{d}  =  d+ (1-e_{t,n}) \sum_{t,n,m} (1-p_{t,n,m})$\;
 %\hat \alpha 
-\STATE $\hat{e_{t,n}}_0=\phi(\hat{a})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m}   \Ep[\alpha_{t,0}] +\sum_m (1-y_{t,n,m}) \Ep[\alpha_{t,1}])$\;
+\STATE $\hat{e_{t,n}}_0=\phi(\hat{a})-\phi(\hat{a}+\hat{b}) + \sum_{m}  p_{t,n,m}   \Ep[\alpha_{t,0}] +\sum_m (1-p_{t,n,m}) \Ep[\alpha_{t,1}])$\;
+
+\STATE $\frac{1}{\sigma^2}(\widetilde{m}_{t}-\widetilde{m}_{t-1})(\frac{\partial \widetilde{m}_{t}}{\partial \hat{\alpha}_{t,0}}-\frac{\partial \widetilde{m}_{t-1}}{\partial \hat{\alpha}_{t,0}}) = (\sum_t(\sum_n \hat{e_{t,n}}_0 \sum_m p_{t,n,m})$
+
+\STATE $\frac{1}{\sigma^2}(\widetilde{m}_{t}-\widetilde{m}_{t-1})(\frac{\partial \widetilde{m}_{t}}{\partial \hat{\alpha}_{t,1}}-\frac{\partial \widetilde{m}_{t-1}}{\partial \hat{\alpha}_{t,1}}) = (\sum_t(\sum_n \hat{e_{t,n}}_0 \sum_m (1-p_{t,n,m}))$
+
 \ENDWHILE\;
 Use $\hat{e_{t,n}}_0$ and $\hat{e_{t,n}}_1$ to re-normalize $\hat{e_{t,n}}$\;
 return $\hat{a},\hat{b},\hat{c},\hat{d},\hat{e_{t,n}},\hat{\alpha_{t}}$
@@ -331,6 +344,7 @@ The data set used in our experiment is crawled through Microblogging API between
 %The keywords we used are %...
 Details of the data set, including the description of each event, the number of comments are shown in Tab.~\ref{table:social event}. We will make the dataset public upon acceptance.
 
+\vspace{-0.6cm}
 \begin{table}
 \begin{center}
 \tiny
@@ -349,36 +363,34 @@ Death Of Wei Zexi   & 59501  & 2016/04/21 2016/09/11   & Wei Zexi died of fake m
 \label{default}
 \end{table}
 
-In pre-processing, repeated tweets, emoji expressions, http links and mentions (@somebody) are removed. For Chinese word segmentation, we use the jieba NLP tool~\cite{jieba}.
-%lexicon 
+\vspace{-0.6cm}
+In pre-processing, repeated tweets, emoji expressions, http links and mentions (@somebody) are removed. For Chinese word segmentation, we use the jieba NLP tool\footnote{https://github.com/fxsjy/jieba}. We get sentiment words and values through the HOWNET lexicon\footnote{http://www.keenage.com/}. 
 
 
 
-\subsection{Evaluation of Entity-level Sentiment Extraction}
+\subsection{Evaluation of Entity-level Sentiment Extraction}\label{sec:Evaluation of Entity-level Sentiment Extraction}
 %dataset description
-Our first research question is whether incorporating proximity information enhances entity-level sentiment extraction. To answer this question, we generate a ground truth of entity-level sentiment polarity for each tweet by first randomly sempling tweets 
-for all incidents. 
-Next, five human volunteers are asked to judge the sentiment polarity of each tweet on each relevant entity. In order to make the ground truth as accurate as possible, the tweet is added to the ground truth if only five volunteers agree with each other. 
+Our first research question is whether incorporating proximity information enhances entity-level sentiment extraction. To answer this question, we generate a ground truth of entity-level sentiment polarity for each tweet by first randomly sampling tweets 
+for all incidents. Next, five human volunteers are asked to judge the sentiment polarity of each tweet on each relevant entity. In order to make the ground truth as accurate as possible, the tweet is added to the ground truth if only five volunteers agree with each other. 
 As a result, we create a sentiment polarity standard data set containing 2000 tweets.
-We wil make the ground truth publically available upon acceptance. 
+We will make the ground truth publiclly available upon acceptance. 
 
 %comparative methods
-We compared our method to three state-of-the-art methods. (1) SentiStrength~\cite{sentistrength2010}: a classic algorithm for sentiment extraction, (2) SentiStrength-SE~\cite{Rakibul2017SentiStrength-SE}: a different lexicon is designed for a different domain, (3) SentCR~\cite{Ahmed2017SentiCR}:  a supervised learning method designed for code review comments. 
-We also provide results obtained by our proposed method with four distance kernels, namely (4) PESE-G: sentiment extraction with Gaussian distance kernel: (5) PESE-T: sentiment extraction with Triangle distance kernel: (6)PESE-C: sentiment extraction with Cosine (Hamming) distance kernel: (7)PESE-I: sentiment extraction with Circle distance kernel.
-Parameter $\sigma$ is set to be $\sigma=$ for PESE-G.% parameters value
+We compared our method to three state-of-the-art methods. (1) SentiStrength ~\cite{sentistrength2010}: a classic algorithm for sentiment extraction, (2) SentiStrength-SE~\cite{Rakibul2017SentiStrength-SE}: a different lexicon is designed for a different domain, (3) SentCR~\cite{Ahmed2017SentiCR}:  a supervised learning method designed for code review comments. 
+We also provide results obtained by our proposed method with four distance kernels, namely (4) PESE-G: sentiment extraction with Gaussian distance kernel: (5) PESE-T: sentiment extraction with Triangle distance kernel: (6)PESE-C: sentiment extraction with Cosine (Hamming) distance kernel: (7)PESE-I: sentiment extraction with Circle distance kernel. After ten-fold cross-validation, parameter $\sigma$ is set to be $\sigma=21$ for PESE methods.
 
 %evaluation metrics
-The evaluation metric is accuracy, which is the ratio of xx versus xx.%description
+The evaluation metric is accuracy, which is the ratio of number of tweets that are correctly judged versus total number of tweets.%description
 
 
 %results and analysis
 As shown in Table~\ref{table:sentiment classification}, all PESE variants outperform the comparable methods.
 PESE-G achieves the highest accuracy averaged over all incidents. 
-We also observe that positive polarities are usually more difficult to identify, with lower accuracies by most methods.  
- To gain some insights about the effect of text length, we split our dataset into three divisions: tweets with less than $20$ words, tweets with $20\sim 40$ words, and long tweets with more than $40$ words.
+We also observe that positive polarities are usually more difficult to identify, with lower accuracies by most methods. To gain some insights about the effect of text length, we split our dataset into three divisions: tweets with less than $20$ words, tweets with $20\sim 40$ words, and long tweets with more than $40$ words.
 We observe that, as the tweet gets longer, the accuracy of our proposed method achieves better results. Our observation is consistent to our assumption that our proposed method is more effective for long text.
 
 %significance 
+\vspace{-0.6cm}
 \begin{table}
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|c|}
@@ -392,7 +404,7 @@ SentiCR                              & 0.7953      & 0.7855      & 0.7911       
  PESE-I                      & 0.8038      & 0.8170      & 0.8011       & 0.8032      & 0.8034       & 0.8166      \\ \hline
 PESE-C                      & 0.8242      & 0.8212      & 0.8269       & 0.8229      & 0.8249       & 0.8291     \\ \hline
 PESE-T                    & 0.8302      & 0.8342      & 0.8398      & 0.8479      & 0.8470       & 0.8486      \\ \hline
-PESE-G                      & \textbf{0.8477}      & 0.8588      & 0.8539       & 0.8771      & 0.8862       & 0.9289      \\ \hline
+PESE-G                      & 0.8477      & 0.8588      & 0.8539       & 0.8771      & 0.8862       & \textbf{0.9289}      \\ \hline
 \end{tabular}
 \caption{Averaged accuracy by different sentiment extraction methods.}\label{table:sentiment classification}
 \end{center}
@@ -400,11 +412,12 @@ PESE-G                      & \textbf{0.8477}      & 0.8588      & 0.8539       
 
 
 
-
-\subsection{Parameter Selection For Distance Function}
+\vspace{-1.5cm}
+\subsection{Parameter Influence Of Distance Function}
 %groundtruth
-In this subsection we study the effect of paramater $\sigma$ to the proposed PESE method. We use the same groundtruth and evaluation metric as in Sec.~\ref{}.We tune $\sigma=1,2\cdots,30$ and report the aerage accuracy over all incidents in Fig.~\ref{fig:sigma}
+In this subsection we study the effect of parameter $\sigma$ to the proposed PESE method. We use the same ground truth and evaluation metric as in Sec~\ref{sec:Evaluation of Entity-level Sentiment Extraction}. We tune $\sigma=1,2\cdots,30$ and report the average accuracy over all incidents in Fig.~\ref{fig:sigma}
 
+\vspace{-0.6cm}
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth,height=1.6in]{sigma.eps}
@@ -412,8 +425,7 @@ In this subsection we study the effect of paramater $\sigma$ to the proposed PES
     \caption{For different kernel functions, the relationship between sentiment analysis accuracy and $\sigma$}\label{fig:sigma}
 \end{figure}
 
-PESE-C is more robust, %not changing...
-PESE- are more sensitive to the value of $\sigma$ %For example, PESE-G achieves the highest accuracy of $$ with $\sigma+$
+As shown in Fig~\ref{fig:sigma}, PESE-C is more stable and less affected by $\sigma$. Other three methods are more sensitive to the value of $\sigma$. For example, PESE-G achieves the highest accuracy of $92.77\%$ with $\sigma=21$.
 
 
 
@@ -438,26 +450,49 @@ The purpose of precision can help us to judge how many time points are correctly
 
 Recall tells us how many time points we can judge whether belongs to shift point in the ground-truth.
 
+\vspace{-0.6cm}
+\begin{figure}
+\centering
+\subfigure[Precision]{\label{fig:precision}
+    \centering
+    \includegraphics[width =.4\textwidth]{precision.eps}
+}
+\hspace{-4ex}
+\subfigure[Recall]{\label{fig:recall}
+    \centering
+    \includegraphics[width =.4\textwidth]{recall.eps}
+}
+\setlength{\abovecaptionskip}{-0.1cm}
+\caption{Comparative performance of shift detection}\label{fig:shift}
+\end{figure}
+
 %result and analysis
 
+As shown in Fig~\ref{fig:shift}, Our model has achieved the best results in detecting shift points. For the six events we selected, our model can achieve an average of 86\% precision and 90\% recall. In contrast, the average precision and recall of FB-LDA are 81\% and 73\%. For LDA \& KL-divergence are 76\% and 68\%. POMS performs the worst which the average precision and recall are 52\% and 59\%. These results show that our model can detect the public opinion shift in the incident more accurately.
+
 %perplexity
-
-%alpha
-Finally, we offer visualization of the background sentiment evolution for the six incidents.
-
-%figure
-%conclusion
+Then, we analyze the performance of predictive. We choose perplexity as evaluation metric. 
 
 \begin{equation}
-    perplexity_{pw} = \exp\{-\frac{\sum_{d \in D}logp(w_d)}{\sum_{d \in D}N_d}\}
+    perplexity_{pw} = \exp\left\{-\frac{\sum_{d \in D}logp(w_d)}{\sum_{d \in D}N_d} \right\}
 \end{equation}
 
 Perplexity is a measurement of how well a probability distribution or probability model predicts a sample. A low perplexity indicates the probability distribution is good at predicting the sample. $p(w_d)$ is the probability of the $d$-th word. $N$ is the length of the sentence.
 
+\vspace{-0.6cm}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth,height=1.6in]{perplexity.eps}
+    \setlength{\abovecaptionskip}{-0.1cm}
+    \caption{Averaged per-word predictive perplexity comparison}\label{fig:perplexity}
+\end{figure}
 
-As shown in Fig~\ref{fig:alpha}, the $\alpha$ which represents the distribution of background opinion in the incidents is smoothly and slowly changing in all six incidents as we considered before. The $\alpha$ of Death Of Wei Zexi, Kindergarten Abuse, Maternity Fall, and Yu Huan Murder is less than 0.5, indicating that negative sentiment is the back ground opinion to these incidents. The $\alpha$ of Jiang Ge Murder and Mammy Arson are greater than 0.5, indicating that positive sentiment is the back ground opinion to these incidents.
+As shown in Fig~\ref{fig:perplexity},  Compared to the other two methods, our model has a smaller averaged per-word perplexity in all six incidents. This result indicates our model has better predictive performance.
+%alpha
 
+Finally, we offer visualization of the background sentiment evolution for the six incidents. 
 
+\vspace{-0.6cm}
 \begin{figure}
 \centering
 \subfigure[Maternity Fall]{\label{fig:time0}
@@ -489,35 +524,24 @@ As shown in Fig~\ref{fig:alpha}, the $\alpha$ which represents the distribution 
     \centering
     \includegraphics[width =.3\textwidth]{wzx.eps}
 }
-\caption{Changes in the $\alpha$ value of six events}\label{fig:alpha}
+\caption{Changes in the $\alpha$ value of six incidents}\label{fig:alpha}
 \end{figure}
 
-\begin{figure}
-\centering
-\subfigure[Precision]{\label{fig:precision}
-    \centering
-    \includegraphics[width =.4\textwidth]{precision.eps}
-}
-\hspace{-4ex}
-\subfigure[Recall]{\label{fig:recall}
-    \centering
-    \includegraphics[width =.4\textwidth]{recall.eps}
-}
-\setlength{\abovecaptionskip}{-0.1cm}
-\caption{Comparative performance of shift detection}\label{fig:shift}
-\end{figure}
-
-As shown in Fig~\ref{fig:shift}, Our model has achieved the best results in detecting shift points. For the six events we selected, our model can achieve an average of 86\% precision and 90\% recall. In contrast, the average precision and recall of FB-LDA are 81\% and 73\%. For LDA \& KL-divergence are 76\% and 68\%. POMS performs the worst which the average precision and recall are 52\% and 59\%. These results show that our model can accurately detect the public opinion shift in the incident.
 
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\textwidth,height=1.6in]{perplexity.eps}
-    \setlength{\abovecaptionskip}{-0.1cm}
-    \caption{Averaged per-word predictive perplexity comparison}\label{fig:perplexity}
-\end{figure}
+As shown in Fig~\ref{fig:alpha}, the $\alpha$ which represents the distribution of background opinion in the incidents is smoothly and slowly changing in all six incidents as we considered before. The $\alpha$ of Death Of Wei Zexi, Kindergarten Abuse, Maternity Fall, and Yu Huan Murder is less than 0.5, indicating that negative sentiment is the back ground opinion to these incidents. The $\alpha$ of Jiang Ge Murder and Mammy Arson are greater than 0.5, indicating that positive sentiment is the back ground opinion to these incidents.
 
- As shown in Fig~\ref{fig:perplexity},  Compared to the other two methods, our model has a smaller averaged per-word perplexity in all six incidents. This result indicates our model has better predictive performance.
+
+
+
+
+
+
+
+
+
+
+ 
 
 \section{Conclusion}\label{sec:conclusion}
 In this paper, we study the problem of tracking the evolution of public opinion in social events. We analyze the differences between social events and entities in sentiment analysis, and propose a new opinion evolution model to track the changes in public opinion in social events. We consider the existence of background opinion distribution in the model, and use probability to indicate the likelihood of sudden changes in sentiments at each time point. To improve the performance of our model, we add entities in the process of sentiment analysis, use the distance function to calculate the influence of emotional words on entities, and experimentally prove that the distance function is more effective for long comments.
@@ -549,9 +573,9 @@ Mike Thelwall, Kevan Buckley, and Georgios Paltoglou.
 \newblock In Journal, pp. 406-418, 2011.
 
 \bibitem{sentistrength2010}
-Mike Thelwall, Kevan Buckley, Georgios Paltoglou, Di Cai, and Arvid Kappas.
+Mike Thelwall,Kevan Buckley,Georgios Paltoglou,Di Cai,Arvid Kappas.
 \newblock Sentiment strength detection in short informal text.
-\newblock Journal of the Association for Information Science and Technology 61, 12 (2010), 2544–2558.
+\newblock In Journa, pp. 2544–2558, 2010.
 
 \bibitem{Thelwall2012lexicon}
 Mike Thelwall, Kevan Buckley, and Georgios Paltoglou. 2012.
@@ -571,7 +595,7 @@ Anastasia Giachanou, Fabio Crestani. 2011.
 \bibitem{An2014sentimentchange}
 X. An, R. A. Ganguly, Y. Fang, B. S. Scyphers, M. A. Hunter, and G. J.
 \newblock Tracking Climate Change Opinions from Twitter Data. 
-\newblock In KDD’14: Workshop on Data Science for Social Good, 2014.
+\newblock In KDD’14, 2014.
 
 \bibitem{Bollen2011sentimentchange}
 J. Bollen, A. Pepe, and H. Mao.
@@ -589,9 +613,9 @@ C. S. Montero, H. Haddad, M. Mozgovoy, and C. B. Ali.
 \newblock In CICLing’16, 2016.
 
 \bibitem{Ahmed2017SentiCR}
-Toufique Ahmed, Amiangshu Bosu, Anindya Iqbal, Shahram Rahimi.
-\newblock SentiCR: A Customized Sentiment Analysis Tool for Code Review Interactions.
-\newblock In ASE ’17, 2017.
+Toufique Ahmed,Amiangshu Bosu,Anindya Iqbal,Shahram Rahimi.
+\newblock SentiCR:A Customized Sentiment Analysis Tool for Code Review Interactions.
+\newblock In ASE ’17.
 
 \bibitem{Go2009Supervisedlearning}
 Alec Go, Richa Bhayani, and Lei Huang. 2009.
@@ -631,7 +655,7 @@ C. J. Hutto and E. Gilbert. 2014.
 \bibitem{Rakibul2017SentiStrength-SE}
 Md Rakibul Islam and Minhaz F Zibran. 2017.
 \newblock Leveraging automated sentiment analysis in software engineering. 
-\newblock In Proceedings of the 14th International Conference on Mining Software Repositories. IEEE Press, 203-214.
+\newblock In Proceedings of IEEE Press, 203-214.
 
 \bibitem{Feng2011lexicon}
 Song Feng, Ritwik Bose, and Yejin Choi. 2011.
@@ -640,16 +664,13 @@ Song Feng, Ritwik Bose, and Yejin Choi. 2011.
 
 \bibitem{Zhang2012corenodes}
 Tiantian Zhang, Bin Wu.
-\newblock A Method for Local Community Detection by Finding Core Nodes. \newblock In Proceedings of the 2012 IEEE/ACM International Conference on Advances in Social Networks Analysis and Mining.
+\newblock A Method for Local Community Detection by Finding Core Nodes. \newblock In Proceedings of the 2012 IEEE/ACM 
 
 \bibitem{Lv2009distancefunction}
 Yuanhua Lv, ChengXiang Zhai.
 \newblock Positional language models for information retrieval.
 \newblock In SIRIG ’09, pp. 299-306, 2009.
 
-%footnote
-\bibitem{jieba}
-https://github.com/fxsjy/jieba
 
 \end{thebibliography}
 
