@@ -190,7 +190,7 @@ if the sentiment value $s>0$, the sentiment polarity of this sentence is positiv
 \section{Public Sentiment Evolution Model}\label{sec:public opinion model}
 \subsection{Problem Definition}
 In this section, we describe in detail the Public Sentiment Evolution Model (PSEM). For a social incident which involves several entities $E=\{e\}$, we first divide the collection of tweets to $T$ time slices. %divide?
-Suppose in each time slice, there are $N_t$ posts, where each post is pre-processed by the PESE to observe an entity-level sentiment polarity on each post $p\in \{0,1\}$. 
+Suppose in each time slice, there are $M_t$ posts, where each post is pre-processed by the PESE to observe an entity-level sentiment polarity on each post $p\in \{0,1\}$. 
 We build a public sentiment evolution model for each entity.
 Our assumptions are: (1) there is a background opinion distribution, i.e. how users normally react to the entity. 
 (2) The background is smoothly and slowly changing. 
@@ -223,30 +223,30 @@ Therefore, we present the following generation process, as illustrated in Figure
 	\edge{alpha0}{alphadots};
 	\edge{alphat}{alphatp};
     
-  	\node[latent, below = 1 of gamma] (s0) {$s_{0,n}$};
+  	\node[latent, below = 1 of gamma] (s0) {$s_{0}$};
 %	 \node[latent, below = 0.8 of alpha0] (eta0) {$\eta_0$};
        	\edge{gamma}{s0};
 %    	\edge{alpha0}{0};        
 	
 
 %	 \node[latent, below = 0.8 of alphat] (etat) {$\eta_t$};
-	 		\node[latent, right = 2.8 of s0 ] (st) {$s_{t,n}$};
+	 		\node[latent, right = 2.8 of s0 ] (st) {$s_{t}$};
         	\edge{gamma}{st};
 %            	\edge{alphat}{etat};
 
 	
-        \node[latent, below = 2 of alpha0 ] (y0) {$p_{0,n,m}$};
-            \node[latent, below = 2  of alphat ] (yt) {$p_{t,n,m}$};
+        \node[latent, below = 2 of alpha0 ] (y0) {$p_{ 0,m}$};
+            \node[latent, below = 2  of alphat ] (yt) {$p_{ t,m}$};
        	\edge{s0}{y0};
 	\edge{alpha0}{y0};
 	    	\edge{st}{yt};
 	\edge{alphat}{yt};
 	
-	 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0 cm] {O0} {(y0)} {$M_n$};
-		 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0.12 cm] {S0} {(s0)  (O0) } {$N_0$}; 
+	 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0 cm] {O0} {(y0)} {$M_0$};
+		 %\plate[inner sep=0.1cm, xshift=-0cm, yshift=0.12 cm] {S0} {(s0)  (O0) } {$N_0$}; 
 
-		 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0 cm] {Ot} {(yt) } {$M_n$};
-		 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0.12 cm] {St} {(st)  (Ot) } {$N_t$}; 
+		 \plate[inner sep=0.1cm, xshift=-0cm, yshift=0 cm] {Ot} {(yt) } {$M_t$};
+		 %\plate[inner sep=0.1cm, xshift=-0cm, yshift=0.12 cm] {St} {(st)  (Ot) } {$N_t$}; 
 	
         \node[latent, below = 2 of y0 ] (beta) {$\beta$};
         
@@ -272,9 +272,9 @@ Therefore, we present the following generation process, as illustrated in Figure
 \item For each pieces of evidence
 \begin{itemize}
 \item Generate a switch $s_t \sim Bern(\gamma)$
-\item For each observation, generate $p_{t,n,m}\sim \begin{cases}
-Bern(\pi(\alpha_t)) & \text{ if } s_{t,n}= 1\\ 
-Bern(\beta) & \text{ if } s_{t,n}= 0 
+\item For each observation, generate $p_{t,m}\sim \begin{cases}
+Bern(\pi(\alpha_t)) & \text{ if } s_{t}= 1\\ 
+Bern(\beta) & \text{ if } s_{t}= 0 
 \end{cases}$
 \end{itemize}
 \end{itemize}
@@ -291,16 +291,15 @@ The joint probability is given by
 %notations
 \begin{multline}
     p(\gamma,\beta,\alpha_0,\cdots,\alpha_T, \vec{s},\vec{p}, |a,b,c,d,\sigma^2) \\
-    =    p(\gamma|a,b) p(\beta|c,d)  p(\alpha_{0:T}|\sigma^2) \prod_t \prod_ n p(s_{t,n}|\gamma) \prod_m p(p_{t,n,m}|s_{t,n},\alpha_t,\beta) 
+    =    p(\gamma|a,b) p(\beta|c,d)  p(\alpha_{0:T}|\sigma^2) \prod_t  p(s_{t}|\gamma) \prod_m p(p_{t,m}|s_{t},\alpha_t,\beta) 
 \end{multline}
 
 
     
 In the nutshell, the optimization algorithm follows the framework of variational inference. Thus we make the following assumptions. 
 
-\vspace{-0.6cm}
 \begin{equation*}
-q(Z|\vec{p},a,b,c,d,\sigma^2) = q(\gamma|\hat{a},\hat{b}) q(\beta|\hat{c},\hat{d}) q(\alpha_{0:T}|\hat{\alpha_{0:T}})\prod_{t,n} q(s_{t,n}|\hat{e_{t,n}}) , 
+q(Z|\vec{p},a,b,c,d,\sigma^2) = q(\gamma|\hat{a},\hat{b}) q(\beta|\hat{c},\hat{d}) q(\alpha_{0:T}|\hat{\alpha_{0:T}})\prod_{t} q(s_{t}|\hat{e_{t}}) , 
 \end{equation*}
 \vspace{-0.6cm}
 
@@ -315,22 +314,22 @@ Then we implement the iterations over all hidden variable, which is described in
 %notations
 \begin{algorithmic}
 %notations
-\WHILE{$\hat{e_{t,n}}_1$ and $\hat{e_{t,n}}_0$  not changed}
-\STATE $\hat{e_{t,n}}_1 = \phi(\hat{b})-\phi(\hat{a}+\hat{b}) + \sum_{m}  y_{t,n,m} (\phi(\hat{c})-\phi(\hat{c}+\hat{d})) +\sum_m (1-p_{t,n,m}) (\phi(\hat{d})-\phi(\hat{c}+\hat{d}))$\;
-\STATE $a \leftarrow  a+ \sum_{t,n} e_{t,n}$\;
-\STATE $\hat{b}  =  b+ \sum_{t,n} (1-e_{t,n})$\;
-\STATE $\hat{c}  =  c+ (1-e_{t,n}) \sum_{t,n,m} p_{t,n,m}$\;
-\STATE $\hat{d}  =  d+ (1-e_{t,n}) \sum_{t,n,m} (1-p_{t,n,m})$\;
+\WHILE{$\hat{e_{t,1}}$ and $\hat{e_{t,0}}$  not changed}
+\STATE $\hat{e_{t,0}} = \phi(\hat{b})-\phi(\hat{a}+\hat{b}) + \sum_{m}  p_{t,m} (\phi(\hat{c})-\phi(\hat{c}+\hat{d})) +\sum_m (1-p_{t,m}) (\phi(\hat{d})-\phi(\hat{c}+\hat{d}))$\;
+\STATE $a \leftarrow  a+ \sum_{t} e_{t}$\;
+\STATE $\hat{b}  =  b+ \sum_{t} (1-e_{t})$\;
+\STATE $\hat{c}  =  c+ (1-e_{t}) \sum_{t,m} p_{t,m}$\;
+\STATE $\hat{d}  =  d+ (1-e_{t}) \sum_{t,m} (1-p_{t,m})$\;
 %\hat \alpha 
-\STATE $\hat{e_{t,n}}_0=\phi(\hat{a})-\phi(\hat{a}+\hat{b}) + \sum_{m}  p_{t,n,m}   \Ep[\alpha_{t,0}] +\sum_m (1-p_{t,n,m}) \Ep[\alpha_{t,1}])$\;
+\STATE $\hat{e_{t,0}}=\phi(\hat{a})-\phi(\hat{a}+\hat{b}) + \sum_{m}  p_{t,m}   \Ep[\alpha_{t,0}] +\sum_m (1-p_{t,m}) \Ep[\alpha_{t,1}])$\;
 
-\STATE $\frac{1}{\sigma^2}(\widetilde{m}_{t}-\widetilde{m}_{t-1})(\frac{\partial \widetilde{m}_{t}}{\partial \hat{\alpha}_{t,0}}-\frac{\partial \widetilde{m}_{t-1}}{\partial \hat{\alpha}_{t,0}}) = (\sum_t(\sum_n \hat{e_{t,n}}_0 \sum_m p_{t,n,m})$
+\STATE $\frac{1}{\sigma^2}(\widetilde{m}_{t}-\widetilde{m}_{t-1})(\frac{\partial \widetilde{m}_{t}}{\partial \hat{\alpha}_{t,0}}-\frac{\partial \widetilde{m}_{t-1}}{\partial \hat{\alpha}_{t,0}}) = \sum_t \hat{e_{t,0}} (\sum_m p_{t,m})$
 
-\STATE $\frac{1}{\sigma^2}(\widetilde{m}_{t}-\widetilde{m}_{t-1})(\frac{\partial \widetilde{m}_{t}}{\partial \hat{\alpha}_{t,1}}-\frac{\partial \widetilde{m}_{t-1}}{\partial \hat{\alpha}_{t,1}}) = (\sum_t(\sum_n \hat{e_{t,n}}_0 \sum_m (1-p_{t,n,m}))$
+\STATE $\frac{1}{\sigma^2}(\widetilde{m}_{t}-\widetilde{m}_{t-1})(\frac{\partial \widetilde{m}_{t}}{\partial \hat{\alpha}_{t,1}}-\frac{\partial \widetilde{m}_{t-1}}{\partial \hat{\alpha}_{t,1}}) = \sum_t \hat{e_{t,0}} (\sum_m (1-p_{t,m}))$
 
 \ENDWHILE\;
-Use $\hat{e_{t,n}}_0$ and $\hat{e_{t,n}}_1$ to re-normalize $\hat{e_{t,n}}$\;
-return $\hat{a},\hat{b},\hat{c},\hat{d},\hat{e_{t,n}},\hat{\alpha_{t}}$
+Use $\hat{e_{t,0}}$ and $\hat{e_{t,0}}$ to re-normalize $\hat{e_{t}}$\;
+return $\hat{a},\hat{b},\hat{c},\hat{d},\hat{e_{t}},\hat{\alpha_{t}}$
 \end{algorithmic}
 \end{algorithm}
 \vspace{-0.6cm}
