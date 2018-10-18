@@ -7,6 +7,14 @@
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{tikz}
+\usepackage{tikz}
+\usetikzlibrary{bayesnet}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{rotating}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{tikz}
 \usepackage{multirow}
 %\usepackage[linesnumbered,boxed]{algorithm2e}
 \usepackage[ruled]{algorithm2e}
@@ -25,7 +33,7 @@
 \title{Model Sentiment Evolution For Social Incidents}
 
 %submission number
-\author{Submission: 535}
+%\author{Submission: 535}
 %anonymous
 %\author{Yunjie Wang\inst{1} \and Xiaoli Wang\inst{1}\and Lin Sun\inst{2} \and Chen Lin\inst{1}}
 %\authorrunning{Y.Wang et al.}
@@ -132,8 +140,8 @@ However, directly applying these lexicons does not guarantee the accuracy of ent
 
 \subsection{Problem Definition}
 %$D$ source
-In this section, we describe Proximity-based Entity-level Sentiment Extraction (PESE). Suppose we have a collection of incident relevant microblog posts $O=\{o\}$ . As an incident involves several entities $E=\{e\}$, we can represent each post $o$ as a set of sentiment triples and entity triples, $o=\{(w_i,l_i,v_i)\}\bigcup \{(e_j,l_j)\}$, where $i$ is the index for sentiment words, $w_i$ is the word which is extracted from a sentiment lexicon $w_i\in D$,  $l_i$  is the location and $v_i$ is the sentiment value of $w_i$, which is also extracted from a sentiment lexicon, $v_i \in \mathcal{R}$,  $j$ is the index for entity occurences, $e_j\in E$ is the name of the entity, $l_j$ is the location of the entity in the post. Our aim is to output the sentiment polarity $p$ for the entity $e_j$ in the post $p_e(o)\in\{0,1\}$.
-\vspace{-0.6cm}
+In this section, we describe Proximity-based Entity-level Sentiment Extraction (PESE). Suppose we have a collection of incident relevant microblog posts $O=\{o\}$ . As an incident involves several entities $E=\{e\}$, we can represent each post $o$ as a set of sentiment triples and entity triples, $o=\{(w_i,l_i,v_i)\}\bigcup \{(e_j,l_j)\}$, where $i$ is the index for sentiment words, $w_i$ is the word which is extracted from a sentiment lexicon $w_i\in D$,  $l_i$  is the location and $v_i$ is the sentiment value of $w_i$, which is also extracted from a sentiment lexicon, $v_i \in \mathcal{R}$,  $j$ is the index for entity occurrences, $e_j\in E$ is the name of the entity, $l_j$ is the location of the entity in the post. Our aim is to output the sentiment polarity $p$ for the entity $e_j$ in the post $p_e(o)\in\{0,1\}$.
+
 \subsection{Distance Function}
 
 %assumption
@@ -186,7 +194,7 @@ if the sentiment value $s>0$, the sentiment polarity of this sentence is positiv
 In this section, we describe in detail the Public Sentiment Evolution Model (PSEM). 
 For a social incident which involves several entities $E=\{e\}$, we first group the tweets based on entities. 
 Next we divide the collection of tweets associated with an entity to $T$ time slices. 
-Suppose in each time slice $t$, there are $M_t$ posts, where each post $m$ is pre-processed by the PESE to observe an entity-level sentiment polarity, which we denote ast $p_{t,m}\in \{0,1\}$. 
+Suppose in each time slice $t$, there are $M_t$ posts, where each post $m$ is pre-processed by the PESE to observe an entity-level sentiment polarity, which we denote as $p_{t,m}\in \{0,1\}$. 
 Then, we build a public sentiment evolution model for each entity.
 
 Our assumptions are: (1) there is a background sentiment distribution, i.e. how users normally react to the entity. 
@@ -280,16 +288,16 @@ Then we iterate over all hidden variable, which is described in Algorithm~\ref{a
 \begin{algorithmic}
 %notations
 \WHILE{$\hat{e_{t,1}}$ and $\hat{e_{t,0}}$  not changed}
-\STATE $\hat{e_{t,0}} = \phi(\hat{b})-\phi(\hat{a}+\hat{b}) + \sum_{m}  p_{t,m} (\phi(\hat{c})-\phi(\hat{c}+\hat{d})) +\sum_m (1-p_{t,m}) (\phi(\hat{d})-\phi(\hat{c}+\hat{d}))$\;
-\STATE $a \leftarrow  a+ \sum_{t} e_{t}$\;
-\STATE $\hat{b}  =  b+ \sum_{t} (1-e_{t})$\;
-\STATE $\hat{c}  =  c+ (1-e_{t}) \sum_{t,m} p_{t,m}$\;
-\STATE $\hat{d}  =  d+ (1-e_{t}) \sum_{t,m} (1-p_{t,m})$\;
+\STATE $\hat{e_{t,1}} = \phi(\hat{b})-\phi(\hat{a}+\hat{b}) + \sum_{m}  p_{t,m} (\phi(\hat{c})-\phi(\hat{c}+\hat{d})) +\sum_m (1-p_{t,m}) (\phi(\hat{d})-\phi(\hat{c}+\hat{d}))$\;
+\STATE $\hat{a} \leftarrow  a+ \sum_{t} e_{t}$\;
+\STATE $\hat{b}  \leftarrow  b+ \sum_{t} (1-e_{t})$\;
+\STATE $\hat{c}  \leftarrow  c+ (1-e_{t}) \sum_{t,m} p_{t,m}$\;
+\STATE $\hat{d}  \leftarrow  d+ (1-e_{t}) \sum_{t,m} (1-p_{t,m})$\;
 \STATE $\hat{e_{t,0}}=\phi(\hat{a})-\phi(\hat{a}+\hat{b}) + \sum_{m}  p_{t,m}   \Ep[\alpha_{t,0}] +\sum_m (1-p_{t,m}) \Ep[\alpha_{t,1}])$\;
 \STATE $\frac{1}{\sigma^2}(\widetilde{m}_{t}-\widetilde{m}_{t-1})(\frac{\partial \widetilde{m}_{t}}{\partial \hat{\alpha}_{t,0}}-\frac{\partial \widetilde{m}_{t-1}}{\partial \hat{\alpha}_{t,0}}) = \sum_t \hat{e_{t,0}} (\sum_m p_{t,m})$
 \STATE $\frac{1}{\sigma^2}(\widetilde{m}_{t}-\widetilde{m}_{t-1})(\frac{\partial \widetilde{m}_{t}}{\partial \hat{\alpha}_{t,1}}-\frac{\partial \widetilde{m}_{t-1}}{\partial \hat{\alpha}_{t,1}}) = \sum_t \hat{e_{t,0}} (\sum_m (1-p_{t,m}))$
 \ENDWHILE\;
-Use $\hat{e_{t,0}}$ and $\hat{e_{t,0}}$ to re-normalize $\hat{e_{t}}$\;
+Use $\hat{e_{t,0}}$ and $\hat{e_{t,1}}$ to re-normalize $\hat{e_{t}}$\;
 return $\hat{a},\hat{b},\hat{c},\hat{d},\hat{e_{t}},\hat{\alpha_{t}}$
 \end{algorithmic}
 \end{algorithm}
@@ -331,7 +339,7 @@ As a result, we create a sentiment polarity standard data set containing 2000 tw
 We will make the ground truth publicly available upon acceptance. 
 
 %comparative methods
-We compared our method to three state-of-the-art methods. (1) SentiStrength ~\cite{sentistrength2010}: a classic algorithm for sentiment extraction, (2) SentiStrength-SE~\cite{Rakibul2017SentiStrength-SE}: a different lexicon is designed for a different domain, (3) SentCR~\cite{Ahmed2017SentiCR}:  a supervised learning method designed for code review comments. 
+We compared our method to three state-of-the-art methods. (1) SentiStrength ~\cite{sentistrength2010}: a classic algorithm for sentiment extraction, (2) SentiStrength-SE~\cite{Rakibul2017SentiStrength-SE}: a different lexicon is designed for a different domain, (3) SentiCR~\cite{Ahmed2017SentiCR}:  a supervised learning method designed for code review comments. 
 We also provide results obtained by our proposed method with four distance kernels, namely (4) PESE-G: sentiment extraction with Gaussian distance kernel: (5) PESE-T: sentiment extraction with Triangle distance kernel: (6)PESE-C: sentiment extraction with Cosine (Hamming) distance kernel: (7)PESE-I: sentiment extraction with Circle distance kernel. After ten-fold cross-validation, parameter $\sigma$ is set to be $\sigma=21$ for all PESE variants.
 
 %evaluation metrics
@@ -429,7 +437,7 @@ Next, we analyze the predictiveness of PSEM. For probabilistic models, researche
 
 We consider each tweet as a document of sentiment polarities, where the ``word'' $w$ represents a polarity icon, $p(w_d)$ is the probability of the $d$-th word computed by the target model, $N$ is the length of the document. 
 Perplexity is a measurement of how well a probability distribution or probability model predicts a sample. A low perplexity indicates the probability distribution is good at predicting the sample. 
-\vspace{-0.6cm}
+
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth,height=1.6in]{perplexity.eps}
@@ -482,7 +490,7 @@ As shown in Fig~\ref{fig:alpha}, the $\alpha$ which represents the distribution 
 
 
 \section{Conclusion}\label{sec:conclusion}
-In this paper, we study the problem of tracking public sentiment in social events. We propose a novel sentiment evolution model which is based on state space model. We consider the existence of background sentiment distribution and simultaneously model the evolution pattern of background sentiment and sentiment shift. To improve entity-level sentiment extraction, we use distance kernels to calculate the influence of sentiment words on entities In the future, we plan to extend the proposed model in explaining causes of sentiment shifts.
+In this paper, we study the problem of tracking public sentiment in social events. We propose a novel sentiment evolution model which is based on state space model. We consider the existence of background sentiment distribution and simultaneously model the evolution pattern of background sentiment and sentiment shift. To improve entity-level sentiment extraction, we use distance kernels to calculate the influence of sentiment words on entities. In the future, we plan to extend the proposed model in explaining causes of sentiment shifts.
 
 \begin{thebibliography}{8}
 
